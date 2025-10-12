@@ -33,7 +33,7 @@
     "build:release": "webpack --progress --config build/webpack.prod.config.js",
     "build:inline": "webpack --progress --config build/webpack.inline.config.js && inline-source --compress false --root ./dist ./dist/index.html ./dist/ParaViewGlance.html",
     "version": "node ./build/writeVersion.js",
-    "dev": "webpack-dev-server --config build/webpack.dev.config.js",
+    "dev": "set NODE_OPTIONS=--openssl-legacy-provider && webpack-dev-server --config build/webpack.dev.config.js",
     "commit": "git cz",
     "semantic-release": "semantic-release",
     "prepublishOnly": "npm run version",
