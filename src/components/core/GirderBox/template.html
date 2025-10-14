@@ -16,8 +16,10 @@
         class="ml-2"
         @click="changeURLPrompt = true"
       >
-        Update
+        Actualizar Datos
       </v-btn>
+
+      <!--
       <v-btn
         v-if="!loggedOut"
         class="ml-2"
@@ -27,8 +29,10 @@
       >
         Log out
       </v-btn>
+    -->
     </v-row>
     <v-row>
+      <!--
       <v-col v-if="loggedOut">
         <GirderAuthentication register :oauth=true :key="girderRest.token" />
         <div class="mt-2">
@@ -36,6 +40,7 @@
           <span>Logging in will refresh and lose any unsaved data.</span>
         </div>
       </v-col>
+      -->
       <v-col>
         <GirderFileManager
           :root-location-disabled="false"
@@ -47,7 +52,7 @@
         <v-toolbar>
           <v-spacer />
           <v-btn class="mt-4" @click="load()" :disabled="!selected.length">
-             Select
+             Seleccionar
           </v-btn>
         </v-toolbar>
       </v-col>
@@ -57,15 +62,15 @@
       width="30%"
     >
       <v-card>
-        <v-card-title>Change Girder URL</v-card-title>
+        <v-card-title>Cambiar la URL de Girder</v-card-title>
         <v-card-text>
-          Changing the girder URL to <pre>{{ newGirderURL }}</pre> will require a refresh.
-          Do you want to continue?
+          Cambiando la URL a <pre>{{ newGirderURL }}</pre> Esto requerirá refrescar la pagina.
+          ¿Quieres continuar?
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn text @click="changeURLPrompt = false">Cancel</v-btn>
-          <v-btn color="primary" @click="refreshPage">Refresh</v-btn>
+          <v-btn text @click="changeURLPrompt = false">Cancelar</v-btn>
+          <v-btn color="primary" @click="refreshPage">Refrescar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

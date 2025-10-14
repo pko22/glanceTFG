@@ -16,12 +16,7 @@ import Vue from 'vue';
 
 */
 
-
-
-
-
-
-// ----------------------------------------------------------------------------
+//  ----------------------------------------------------------------------------
 
 function getSupportedExtensions() {
   return ['zip', 'raw', 'glance', 'gz'].concat(
@@ -29,7 +24,7 @@ function getSupportedExtensions() {
   );
 }
 
-// ----------------------------------------------------------------------------
+//  ----------------------------------------------------------------------------
 
 export function getExtension(filename) {
   const i = filename.lastIndexOf('.');
@@ -39,7 +34,7 @@ export function getExtension(filename) {
   return '';
 }
 
-// ----------------------------------------------------------------------------
+//  ----------------------------------------------------------------------------
 
 function zipGetSupportedFiles(zip, path) {
   const supportedExts = getSupportedExtensions();
@@ -61,7 +56,7 @@ function zipGetSupportedFiles(zip, path) {
   return promises;
 }
 
-// ----------------------------------------------------------------------------
+//  ----------------------------------------------------------------------------
 
 function readRawFile(file, { dimensions, spacing, dataType }) {
   return new Promise((resolve, reject) => {
@@ -93,8 +88,7 @@ function readRawFile(file, { dimensions, spacing, dataType }) {
   });
 }
 
-// ----------------------------------------------------------------------------
-
+//  ----------------------------------------------------------------------------
 
 /*
 Un store en vuex tiene siempre:
@@ -112,16 +106,16 @@ Usando commit, cada cambio queda registrado y se puede depurar fácilmente (por 
 export default ({ proxyManager, girder }) => ({
   namespaced: true,
 
-  //El state seran las variables globales del fileLoader global
+  //  El state seran las variables globales del fileLoader global
   state: {
-    remoteFileList: [],//archivos que se van a descargar de un servidor remoto
-    fileList: [],//Archivos cargados o en cola para ser descargados
-    loading: false,//Flag que indica si estas cargando archivos o no
-    progress: {},//Para saber el progreso de descarga y poder poner un medidor
+    remoteFileList: [], //  archivos que se van a descargar de un servidor remoto
+    fileList: [], //  Archivos cargados o en cola para ser descargados
+    loading: false, //  Flag que indica si estas cargando archivos o no
+    progress: {}, //  Para saber el progreso de descarga y poder poner un medidor
   },
 
   getters: {
-    //Te dice si hay algun archivo con fallo
+    // Te dice si hay algun archivo con fallo
     anyErrors(state) {
       return state.fileList.reduce(
         (flag, file) => flag || file.state === 'error',
@@ -129,7 +123,7 @@ export default ({ proxyManager, girder }) => ({
       );
     },
 
-    //Te devuelve el mnumero que representa el progreso de carga de archivos
+    // Te devuelve el mnumero que representa el progreso de carga de archivos
     totalProgress(state) {
       const itemProgresses = Object.values(state.progress);
       if (itemProgresses.length === 0) {
@@ -142,34 +136,31 @@ export default ({ proxyManager, girder }) => ({
     },
   },
 
-
-  //Las mutatios son como las funciones que puedes hacer desde este vuex
+  // Las mutatios son como las funciones que puedes hacer desde este vuex
   mutations: {
-
-    //Para activar el flag de loading
+    // Para activar el flag de loading
     startLoading(state) {
       state.loading = true;
     },
 
-    //Desactivar flag de loading
+    // Desactivar flag de loading
     stopLoading(state) {
       state.loading = false;
     },
 
-    //resetea a 0 los archivos descargados o pendientes por descargar
+    // resetea a 0 los archivos descargados o pendientes por descargar
     resetQueue(state) {
       state.fileList = [];
     },
 
-    //Añade archivos a la cola de archivos por descargar
+    // Añade archivos a la cola de archivos por descargar
     addToFileList(state, files) {
       for (let i = 0; i < files.length; i++) {
         const fileInfo = files[i];
 
-
-        //crear un dato llamado fileState con el archivo que queremos añadir(depende del tipo de archivo para ser añadido obviamente no es lo mismo un png que un dicom)
+        // crear un dato llamado fileState con el archivo que queremos añadir(depende del tipo de archivo para ser añadido obviamente no es lo mismo un png que un dicom)
         const fileState = {
-          // possible values: needsDownload, needsInfo, loading, ready, error
+          //  possible values: needsDownload, needsInfo, loading, ready, error
           state: 'loading',
           name: fileInfo.name,
           ext: getExtension(fileInfo.name),
@@ -199,35 +190,35 @@ export default ({ proxyManager, girder }) => ({
         state.fileList.push(fileState);
       }
     },
-    //Le cambia el state al archivo con el index indicado
+    // Le cambia el state al archivo con el index indicado
     setFileNeedsInfo(state, index) {
       if (index >= 0 && index < state.fileList.length) {
         state.fileList[index].state = 'needsInfo';
         state.fileList[index].extraInfo = null;
       }
     },
-    //Settea el state y el archivo al archivo con el index indicado( esto es para los datos remotos, cuando se termiinan de descargar)
+    // Settea el state y el archivo al archivo con el index indicado( esto es para los datos remotos, cuando se termiinan de descargar)
     setRemoteFile(state, { index, file }) {
       if (index >= 0 && index < state.fileList.length) {
         state.fileList[index].state = 'loading';
         state.fileList[index].files = [file];
       }
     },
-    //Le mete un reader especifico al archivo con el index en cuestion. Esto es para que vtk lo pueda leer bien
+    // Le mete un reader especifico al archivo con el index en cuestion. Esto es para que vtk lo pueda leer bien
     setFileReader(state, { index, reader }) {
       if (reader && index >= 0 && index < state.fileList.length) {
         state.fileList[index].reader = reader;
         state.fileList[index].state = 'ready';
       }
     },
-    //Esto es para meter mas info a un archivo raw, que necesita mas info para ser leido
+    // Esto es para meter mas info a un archivo raw, que necesita mas info para ser leido
     setRawFileInfo(state, { index, info }) {
       if (info && index >= 0 && index < state.fileList.length) {
         state.fileList[index].extraInfo = info;
         state.fileList[index].state = 'loading';
       }
     },
-    //le pone un error al archivo en cuestion
+    // le pone un error al archivo en cuestion
     setFileError(state, { index, error }) {
       if (error && index >= 0 && index < state.fileList.length) {
         state.fileList[index].error = error;
@@ -235,25 +226,24 @@ export default ({ proxyManager, girder }) => ({
       }
     },
 
-    //Elimina un archivo de la lista de archivos
+    // Elimina un archivo de la lista de archivos
     deleteFile(state, index) {
       if (index >= 0 && index < state.fileList.length) {
         state.fileList.splice(index, 1);
       }
     },
-    //Va a las variables del store, concretamente a la de progress, en el id determnado le pone el nuevo porcentage de carga
+    // Va a las variables del store, concretamente a la de progress, en el id determnado le pone el nuevo porcentage de carga
     setProgress(state, { id, percentage }) {
       Vue.set(state.progress, id, percentage);
     },
-    //Elimina el valor de progreso de descargsa(lo borra pa todos)
+    // Elimina el valor de progreso de descargsa(lo borra pa todos)
     clearProgresses(state) {
       state.progress = {};
     },
   },
 
   actions: {
-
-    //Abre el panel de seleccionar archivos locales que quieres cargar, crea una promesa que se resuelve cuando se elige obviamente
+    // Abre el panel de seleccionar archivos locales que quieres cargar, crea una promesa que se resuelve cuando se elige obviamente
     promptLocal({ dispatch }) {
       const exts = getSupportedExtensions();
       return new Promise((resolve, reject) =>
@@ -263,18 +253,18 @@ export default ({ proxyManager, girder }) => ({
       );
     },
 
-    //llama a lamutacion de resetQueue
+    // llama a lamutacion de resetQueue
     resetQueue({ commit }) {
       commit('resetQueue');
     },
 
-    //Llama a la mutacion de deleteFile
+    // Llama a la mutacion de deleteFile
     deleteFile({ commit }, index) {
       commit('deleteFile', index);
     },
-    //LLama a la mutacion de añadir un file a la cola de descarga. 
-    // Ademas le pasa los datos del archivo remoto que se va a descargar
-    //despues llama a otra funcion readAllFiles para leer todos los archivos(ESTA MAS ABAJO DEFINIDA)
+    // LLama a la mutacion de añadir un file a la cola de descarga.
+    //  Ademas le pasa los datos del archivo remoto que se va a descargar
+    // despues llama a otra funcion readAllFiles para leer todos los archivos(ESTA MAS ABAJO DEFINIDA)
     openRemoteFiles({ commit, dispatch }, remoteFiles) {
       commit(
         'addToFileList',
@@ -284,14 +274,14 @@ export default ({ proxyManager, girder }) => ({
           remoteURL: rfile.url,
           remoteOpts: rfile.options,
           withGirderToken: !!rfile.withGirderToken,
-          // Key value pairs to be eventually set on the proxy
+          //  Key value pairs to be eventually set on the proxy
           proxyKeys: rfile.proxyKeys,
         }))
       );
 
       return dispatch('readAllFiles');
     },
-  /*
+    /*
     Separa archivos ZIP y otros archivos.(los zip los descomprime y va viendo si son compatibles)
     Combina los archivos descomprimidos con los no ZIP y vuelve a llamar openFiles para procesarlos uno a uno.
     
@@ -314,8 +304,8 @@ export default ({ proxyManager, girder }) => ({
           .then((newFileList) => dispatch('openFiles', newFileList));
       }
 
-      // split out dicom and single datasets
-      // all dicom files are assumed to be from a single series
+      //  split out dicom and single datasets
+      //  all dicom files are assumed to be from a single series
       const regularFileList = [];
       const dicomFileList = [];
       files.forEach((f) => {
@@ -329,7 +319,7 @@ export default ({ proxyManager, girder }) => ({
       if (dicomFileList.length) {
         const dicomFile = {
           type: 'dicom',
-          name: dicomFileList[0].name, // pick first file for name
+          name: dicomFileList[0].name, //  pick first file for name
           list: dicomFileList,
         };
         commit('addToFileList', [dicomFile]);
@@ -346,7 +336,7 @@ export default ({ proxyManager, girder }) => ({
 
       return dispatch('readAllFiles');
     },
-    //recorre el array de fileList del las variables "globales" y va llamamndo a readFileIndex(OTRA ACCION DEFINIDA MAS ABAJO)
+    // recorre el array de fileList del las variables "globales" y va llamamndo a readFileIndex(OTRA ACCION DEFINIDA MAS ABAJO)
     readAllFiles({ dispatch, state }) {
       const readPromises = [];
       for (let i = 0; i < state.fileList.length; i++) {
@@ -356,7 +346,7 @@ export default ({ proxyManager, girder }) => ({
       return Promise.all(readPromises);
     },
 
-  /*
+    /*
     Funcion encargada de leer cada archivo dependiendo de su estado y tipo
 
       tipo:needsDownload--->descarga el archivo remoto (con token Girder si aplica) y actualiza progreso.
@@ -396,7 +386,7 @@ export default ({ proxyManager, girder }) => ({
               index: fileIndex,
               file: datasetFile,
             });
-            // re-run ReadFileIndex on our newly downloaded file.
+            //  re-run ReadFileIndex on our newly downloaded file.
             return dispatch('readFileIndex', fileIndex);
           })
           .catch(() => {
@@ -428,7 +418,7 @@ export default ({ proxyManager, girder }) => ({
         );
       } else {
         if (file.ext === 'glance') {
-          // see if there is a state file before this one
+          //  see if there is a state file before this one
           for (let i = 0; i < fileIndex; i++) {
             const f = state.fileList[i];
             if (f.ext === 'glance') {
@@ -461,8 +451,8 @@ export default ({ proxyManager, girder }) => ({
         }
       });
     },
-    //Le mete info adicional a archivos de tipo RAW o pone archivos a tipo NeedsInfo 
-    // y vuelve a llamar a readFileIndex para que lo lea
+    // Le mete info adicional a archivos de tipo RAW o pone archivos a tipo NeedsInfo
+    //  y vuelve a llamar a readFileIndex para que lo lea
     setRawFileInfo({ commit, dispatch }, { index, info }) {
       if (info) {
         commit('setRawFileInfo', { index, info });
@@ -471,7 +461,7 @@ export default ({ proxyManager, girder }) => ({
       }
       return dispatch('readFileIndex', index);
     },
-  /*
+    /*
     1) Marfca el flag a loading y limpia los progresos anteriores
     2) Filtra los archivos y solo coge  los que estan ready
     3) Si hay algun archivo con estado glance lo procesa el primero y restaura la app. Este tipo de archivo es el propio de la app
@@ -496,7 +486,7 @@ export default ({ proxyManager, girder }) => ({
       const readyFiles = state.fileList.filter((f) => f.state === 'ready');
       let promise = Promise.resolve();
 
-      // load state file first
+      //  load state file first
       const stateFile = readyFiles.find((f) => f.ext === 'glance');
       if (stateFile) {
         const reader = stateFile.reader.reader;
@@ -547,7 +537,7 @@ export default ({ proxyManager, girder }) => ({
                   ? reader.getOutputData()
                   : dataset;
               Object.assign(readerBundle, {
-                // use dataset instead of reader
+                //  use dataset instead of reader
                 dataset: postProcessDataset(ds, meta),
                 reader: null,
               });
@@ -569,7 +559,7 @@ export default ({ proxyManager, girder }) => ({
           .getSources()
           .filter((p) => p.getProxyName() === 'TrivialProducer');
 
-        // attach labelmaps to most recently loaded image
+        //  attach labelmaps to most recently loaded image
         if (sources[sources.length - 1]) {
           const lastSourcePID = sources[sources.length - 1].getProxyId();
           for (let i = 0; i < loadedLabelmaps.length; i++) {
@@ -596,7 +586,7 @@ export default ({ proxyManager, girder }) => ({
             );
           }
 
-          // attach measurements to most recently loaded image
+          //  attach measurements to most recently loaded image
           for (let i = 0; i < measurementFiles.length; i++) {
             const measurements =
               measurementFiles[i].reader.reader.getOutputData();

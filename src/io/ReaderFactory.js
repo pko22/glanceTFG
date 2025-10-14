@@ -1,7 +1,6 @@
 import vtkHttpDataAccessHelper from '@kitware/vtk.js/IO/Core/DataAccessHelper/HttpDataAccessHelper';
 import { createRepresentationInAllViews } from 'paraview-glance/src/utils';
 
-
 /*
 
   Esta clase se encarga de leer los archivos de entrada, ya sean locales o remotos. Ademas los convierte en assets 
@@ -14,10 +13,6 @@ import { createRepresentationInAllViews } from 'paraview-glance/src/utils';
   Un lector VTK es un objeto que  sabe como abrir y entender un tipo de archivo para abrirlo con vtk
 
 */
-
-
-
-
 
 const READER_MAPPING = {};
 
@@ -159,7 +154,8 @@ function loadFiles(files) {
 
 // ----------------------------------------------------------------------------
 
-function loadFileSeries(files, extension, outFileName = '') {//Este es usado para dicom, que son una serie de archivos
+function loadFileSeries(files, extension, outFileName = '') {
+  // Este es usado para dicom, que son una serie de archivos
   return new Promise((resolve, reject) => {
     if (files.length) {
       const readerMapping = READER_MAPPING[extension];

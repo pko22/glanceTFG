@@ -20,6 +20,7 @@ export default [
       },
     ],
   },
+  /*
   {
     label: '202-t + Edges',
     image: Images.CAD,
@@ -169,4 +170,5 @@ export default [
   //   acknowledgement: 'Philips Research, Hamburg, Germany',
   //   description: 'Rotational C-arm x-ray scan of a human foot. Tissue and bone are present in the dataset.',
   // },
+  */
 ];

@@ -101,7 +101,7 @@ export default {
     fileType: generateImage,
     showDialog(val) {
       if (val) {
-        this.filename = 'Untitled';
+        this.filename = 'Sin_titulo';
         this.fileType = '.png';
         this.generateImage();
       }

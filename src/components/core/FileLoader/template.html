@@ -12,8 +12,11 @@
         <v-card-text>
           <v-container>
             <v-tabs v-model="active_tab">
+
               <v-tab>Local</v-tab>
+
               <v-tab v-if="girderRest">Girder</v-tab>
+
               <v-tab-item transition="fade-transition">
                 <drag-and-drop
                   enabled
@@ -29,16 +32,17 @@
                         [$style.dropTarget]: dragHover,
                         }"
                     >
-                      <v-btn>browse</v-btn>
+                      <v-btn>Abrir Ubicacion Local</v-btn>
                       <span class="ml-2">
-                        or drop your files here
+                        Suelta aqui tus archivos
                       </span>
                     </v-row>
                   </template>
                 </drag-and-drop>
               </v-tab-item>
               <v-tab-item transition="fade-transition" v-if="girderRest">
-                <girder-box />     
+                <!-- Esto es el subComponente girder(lo voy a desabilitar)-->
+                <girder-box /> 
               </v-tab-item>
             </v-tabs>
             <v-row class="mt-2">
@@ -110,14 +114,14 @@
             :disabled="loading"
             @click="close"
           >
-            Cancel
+            Cancelar
           </v-btn>
           <v-btn
             color="primary"
             :disabled="loading || pendingFiles || !hasReadyFiles"
             @click="loadFiles"
           >
-            {{ loading ? 'Loading...' : 'Load' }}
+            {{ loading ? 'Cargando...' : 'Cargar Archivos' }}
           </v-btn>
         </v-card-actions>
       </v-card>

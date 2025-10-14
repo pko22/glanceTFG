@@ -8,7 +8,7 @@
     flat
     v-if="screenshot"
   >
-    <v-card-title>Save Screenshot</v-card-title>
+    <v-card-title>Guardar Captura de Pantalla</v-card-title>
     <v-container grid-list-md>
       <v-layout row wrap>
         <v-flex v-bind="flexLayout">
@@ -44,7 +44,7 @@
             <v-layout row>
               <v-flex xs12>
                 <v-checkbox
-                  label="Transparent background"
+                  label="Fondo transparente"
                   v-model="transparentBackground"
                 />
               </v-flex>
@@ -60,13 +60,13 @@
         color="red"
         @click.native="close"
       >
-        <span>Cancel</span>
+        <span>Cancelar</span>
       </v-btn>
       <v-btn
         color="secondary"
         @click.native="save(); close()"
       >
-        <span>Save</span>
+        <span>Guardar</span>
       </v-btn>
       <v-btn
         color="primary"
@@ -74,7 +74,7 @@
         :download="filename + fileType"
         @click.native="close"
       >
-        <span>Download</span>
+        <span>Descargar</span>
       </v-btn>
     </v-card-actions>
   </v-card>

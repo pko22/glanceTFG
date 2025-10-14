@@ -1,11 +1,16 @@
+<!-- SubComponente de menu lateral para hacer screensot-->
 <div :class="$style.container">
   <v-toolbar
     color="transparent"
     flat
     class="flex-grow-0"
   >
-    <v-toolbar-title>Screenshots</v-toolbar-title>
+
+  <!--Titulo de arriba-->
+    <v-toolbar-title>Capturas de pantalla</v-toolbar-title>
+
     <v-spacer />
+    <!--Flechita para volver-->
     <v-btn
       icon
       v-on:click="$emit('close')"
@@ -13,29 +18,36 @@
       <v-icon>mdi-arrow-right</v-icon>
     </v-btn>
   </v-toolbar>
+
+  <!-- Contenido dentro del menu lateral si no hay capturas todavia-->
   <div
     v-show="!atLeastOneScreenshot"
     :class="$style.emptyState"
-  >
+  > 
+
     <v-icon large>mdi-image-multiple</v-icon>
-    <span class="subtitle-1 grey--text text--darken-1">No screenshots yet!</span>
+    <span class="subtitle-1 grey--text text--darken-1">No hay capturas de pantalla todavia!</span>
     <v-btn
       class="mt-4"
       :disabled="!activeView"
       v-on:click="takeScreenshot"
     >
-      Capture Active View
+      Capturar pantalla Activa
     </v-btn>
   </div>
+
+  <!-- Contenido dentro del menu lateral si ya hay capturas-->
   <v-list
     v-show="atLeastOneScreenshot"
   >
+  <!-- Lista de  archivos ordenados por carpetas-->
     <v-list-group
       v-for="name in Object.keys(screenshots)"
       :key="name"
       prepend-icon="mdi-folder"
       no-action
     >
+      <!-- Carpeta ce screenshot-->
       <template v-slot:activator>
         <v-list-item-content>
           <v-list-item-title>
@@ -43,7 +55,6 @@
           </v-list-item-title>
         </v-list-item-content>
       </template>
-
       <v-tooltip
         v-for="(screenshot, i) in screenshots[name]"
         :key="i"
@@ -51,18 +62,24 @@
         :disabled="smallScreen"
         :content-class="$style.hoverTooltip"
       >
+
+      <!-- Para que cuando clickes encima te salga la vista-->
         <template v-slot:activator="{ on }">
           <v-list-item
             link
             v-on="on"
             @click="viewScreenshot(name, i)"
           >
+            <!-- Elementos dentro de las carpetas(las screenshot en si)-->
+
             <v-list-item-title
               :title="screenshot.filename"
               :class="$style.filename"
             >
               {{ screenshot.filename }}
             </v-list-item-title>
+
+            <!--Bototnes de descargar y borrar-->
             <v-list-item-action :class="$style.action">
               <v-btn
                 icon
@@ -84,6 +101,9 @@
             </v-list-item-action>
           </v-list-item>
         </template>
+
+      <!-- Para que cuando clickes encima el raton te salga la vista-->
+
         <img
           :class="$style.hoverImage"
           :src="screenshot.image"
@@ -91,6 +111,8 @@
       </v-tooltip>
     </v-list-group>
   </v-list>
+
+  <!-- Dialog que se abre al pulsar en crear la captura de pantalla-->
   <screenshot-dialog
     v-on:save="addScreenshot"
   />

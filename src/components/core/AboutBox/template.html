@@ -6,42 +6,36 @@
   </div>
   <v-card-title class="text-center">
     <svg-icon icon="glance-logo" :class="$style.glanceIcon" />
+        (no se si hay que quitar este logo)
+
   </v-card-title>
   <v-card-text>
     <p class="body-1">
       <a rel="noopener noreferrer" target="_blank" href="https://kitware.github.io/glance/">Glance</a>
-      is an open-source web application developed at
+      Es un programa de codigo abierto desarrollado por 
       <a rel="noopener noreferrer" target="_blank" href="https://www.kitware.com/">Kitware</a>
-      for visualizing volumetric images, molecular structures, geometric
-      objects, and point clouds.  Also, it can serve as a foundation for building custom web-based
-      visualization applications involving
+      para la visualizacion de imagenes y volumenes 3d con vtk.js. Desde datos medicos hasta estructuras geometricas,
+      todo puede representarse con esta libreria.
+
+      Se ha usado la app de kitware glance como base del proyecto tal y como se describe en su pagina oficial. 
+      De esta manera conseguimos implementar 
       <a rel="noopener noreferrer" target="_blank" href="http://insightsoftwareconsortium.github.io/itk-js/">ITK.js</a>
-      and
+      (que es la libreria predecesora de
       <a rel="noopener noreferrer" target="_blank" href="https://kitware.github.io/vtk-js/">VTK.js</a>.
+      ) para la lectura de imagenes medicas.
     </p>
+
     <ul class="ml-5">
       <li class="body-1">
-        <span>Here is our</span>
-        <a rel="noopener noreferrer" target="_blank" href="https://kitware.github.io/glance/doc/">documentation</a>.
-      </li>
-      <li class="body-1">
-        <span>Ask questions in our</span>
-        <a rel="noopener noreferrer" target="_blank" href="https://discourse.vtk.org/c/web/volview/13">community support channel</a>.
-      </li>
-      <li class="body-1">
-        <span>Request features and report bugs in our</span>
-        <a rel="noopener noreferrer" target="_blank" href="https://github.com/Kitware/glance/issues">issue tracker</a>.
-      </li>
-      <li class="body-1">
-        <span>We are open source!</span>
-        <a rel="noopener noreferrer" target="_blank" href="https://github.com/Kitware/glance">Code is on Github</a>.
-      </li>
-      <li class="body-1">
-        <span>Current version: {{version}}</span>
+        <span>Aqui esta el codigo por si quieres descargar la app:</span>
+        <a rel="noopener noreferrer" target="_blank" href="https://github.com/Kitware/glance">Code is on Github(cambiar el enlace)</a>.
       </li>
     </ul>
+
     <v-layout row wrap class="text-center" align-end>
       <v-flex xs4>
+
+        (No se si debo quitar estos logos)
         <a rel="noopener noreferrer" target="_blank" href="https://www.kitware.com">
           <svg-icon icon="kitware" :class="$style.aboutIcon" />
         </a>
@@ -59,8 +53,6 @@
         </a>
       </v-flex>
     </v-layout>
-    <div class="pt-4 d-block text-center grey--text text--darken-2">
-      &copy; {{ new Date().getFullYear() }} — Kitware, Inc.
-    </div>
+
   </v-card-text>
 </v-card>
