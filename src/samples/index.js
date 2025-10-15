@@ -5,6 +5,11 @@ const version =
     ? window.GLANCE_VERSION
     : 'master';
 
+/*
+  AQUI MOLARIA TENER UN BACKEND QUE ME RECOJA UNA PETICION Y ME DE LOS ARCHIVOS .GLANCE/.VTI/.DCM/...
+  Esto tendre que hacerlo mas adelante, por ahora lo hago a pelo desde la carpeta /static que segun el webpack
+  si que se expone en el navegador
+*/
 // prettier-ignore
 export default [
   {
@@ -20,6 +25,32 @@ export default [
       },
     ],
   },
+  {
+  label: 'Paciente de ejemplo 1',
+  image: Images.Paciente1,
+  size: '8.24 MB',
+  description: 'Es una ct de un paciente de ejemplo',
+  acknowledgement: 'Archivos de prueba de DEFACING',
+  datasets: [
+    {
+      name: 'paciente1.glance',
+      url: '/data/paciente1.glance'
+    }
+  ]
+},
+  {
+  label: 'Paciente de ejemplo 1 DEFACED',
+  image: Images.paciente1Defaced,
+  size: '11.9 MB',
+  description: 'Es una ct de un paciente de ejemplo despues de ejejcutar el DEFACING',
+  acknowledgement: 'Archivos de prueba de DEFACING',
+  datasets: [
+    {
+      name: 'paciente1-DEFACED.glance',
+      url: '/data/paciente1-DEFACED.glance'
+    }
+  ]
+}
   /*
   {
     label: '202-t + Edges',

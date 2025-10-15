@@ -8,6 +8,8 @@ import Lysozyme from './lysozyme.jpg';
 import SinglePin from './singlepin.jpg';
 import Tooth from './tooth.jpg';
 import Covid19 from './covid19.jpg';
+import Paciente1 from './paciente1.png';
+import paciente1Defaced from './paciente1-DEFACED.png';
 
 export default {
   Aneurism,
@@ -20,4 +22,6 @@ export default {
   SinglePin,
   Tooth,
   Covid19,
+  Paciente1,
+  paciente1Defaced,
 };

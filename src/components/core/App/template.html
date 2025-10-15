@@ -112,7 +112,7 @@
         }"
       >
 
-      <!-- Componente De visor vtk(core/landing)-->
+      <!-- Componente De la parte de arriba(core/landing)-->
         <landing
           v-if="landingVisible"
           key="if-landing"
@@ -186,7 +186,7 @@
       <!-- SubComponente con un dialog que muestra los errores -->
       <browser-issues />
 
-      <!-- Info de la app dialog -->
+      <!-- Dialog con Info de la app  -->
       <component
         :is="dialogType"
         v-model="aboutDialog"

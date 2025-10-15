@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // 1️⃣ Inicia el servidor de desarrollo
+      "type": "node",
+      "request": "launch",
+      "name": "Start Vite server (yarn dev)",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "autoAttachChildProcesses": true
+    },
+    {
+      // 2️⃣ Adjunta VS Code al navegador (para breakpoints en .vue o .js)
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug in Chrome",
+      "url": "http://localhost:9999",
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMaps": true
+    }
+  ]
+}

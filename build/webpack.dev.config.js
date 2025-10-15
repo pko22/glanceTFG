@@ -3,6 +3,8 @@ const { mergeWithRules } = require('webpack-merge');
 
 const baseConfig = require('./webpack.base.config');
 
+const path = require('path');
+
 const HOST = process.env.HOST;
 const PORT = process.env.PORT && Number(process.env.PORT);
 
@@ -53,9 +55,13 @@ module.exports = merge(baseConfig, {
     ],
   },
   devServer: {
-    static: {
-      directory: baseConfig.output.path,
-    },
+    static: [
+      {directory: baseConfig.output.path},
+      { directory: path.join(__dirname, '../public') },     
+        //ESTO ES PARA EXPONER LA CARPETA /PUBLIC EN DESARROLLO ASI PUEDO IMPORTAR LOS .GLANCE MAS FACIL
+        // LUEGO EN PRODUCCION ESTO NO HACE FALTA, YA QUE LOS .GLANCE LOS COGE DE LA BBDD que creare mas adelante
+
+    ],
     client: {
       overlay: {
         errors: true,
