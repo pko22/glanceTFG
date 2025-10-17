@@ -11,8 +11,9 @@ const AngleComponent = create2DTool('Angle', {
         angle: 0.0,
       };
     },
+    // deberia cambiar este nombre
     getMeasurementLabels() {
-      return ['Angle'];//deberia cambiar este nombre
+      return ['Angle'];
     },
     getDisplayedMeasurements() {
       return {
