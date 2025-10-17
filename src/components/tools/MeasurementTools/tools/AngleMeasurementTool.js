@@ -12,7 +12,7 @@ const AngleComponent = create2DTool('Angle', {
       };
     },
     getMeasurementLabels() {
-      return ['Angle'];
+      return ['Angle'];//deberia cambiar este nombre
     },
     getDisplayedMeasurements() {
       return {

@@ -26,7 +26,7 @@
       </div>
       <v-spacer />
       <v-tooltip v-if="datasets.length > 1" bottom>
-        <span class="pv-no-select">Activate source</span>
+        <span class="pv-no-select">Activar foco</span>
         <template v-slot:activator="{ on }">
           <v-btn
             :class="$style.headerMenuButton"
@@ -52,10 +52,13 @@
           </template>
           <v-list dense>
             <v-list-item v-on:click="deleteDataset(sourceId)">
-              <v-list-item-title>Delete</v-list-item-title>
+              <v-list-item-title>Eliminar</v-list-item-title>
             </v-list-item>
             <v-list-item v-on:click="uploadDataset(sourceId)">
-              <v-list-item-title>Upload To Girder</v-list-item-title>
+              <v-list-item-title>Subir a  Girder(aqui deberemos poner subir a mi almacen personal)</v-list-item-title>
+            </v-list-item>
+            <v-list-item v-on:click="uploadDataset(sourceId)">
+              <v-list-item-title>Subir a  Girder(aqui deberemos poner subir a mi almacen publico)</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>

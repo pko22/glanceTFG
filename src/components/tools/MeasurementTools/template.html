@@ -3,7 +3,7 @@
     <v-layout wrap align-center>
       <v-flex xs12>
         <source-select
-          label="Target Dataset"
+          label="Archivo objetivo"
           :filterFunc="filterImageData"
           bindToActiveSource
           @input="setTargetDataset"
@@ -15,7 +15,7 @@
       <div :class="$style.heading">
         <v-layout align-center>
           <v-flex xs10>
-            <span class="body-2">Tool List</span>
+            <span class="body-2">Lista de Herramientas</span>
           </v-flex>
           <v-flex xs6>
             <v-btn-toggle
@@ -87,7 +87,7 @@
                       <v-icon>mdi-crosshairs-gps</v-icon>
                     </v-btn>
                   </template>
-                  Jump to slice
+                  Ir a la capa
                 </v-tooltip>
               </div>
               <div :class="$style.action">
@@ -109,7 +109,7 @@
                           />
                         </v-flex>
                         <v-flex xs12>
-                          <div class="body-1">Tool color</div>
+                          <div class="body-1">Color de la herramienta</div>
                           <v-divider :class="$style.divider" />
                           <palette-picker
                             class="pt-2"
@@ -120,7 +120,7 @@
                           />
                         </v-flex>
                         <v-flex xs12>
-                          <div class="body-1">Text Size</div>
+                          <div class="body-1">Tamaño de texto</div>
                           <v-divider :class="$style.divider" />
                         </v-flex>
                         <v-flex xs9>
@@ -167,12 +167,16 @@
           </component>
         </template>
         <template v-else>
-          <div class="pt-2 body-1 teal--text text-center">No measurements yet</div>
+          <div class="pt-2 body-1 teal--text text-center">No hay mediciones todavia</div>
         </template>
+
+        <!-- esto no me hace falta-->
+         <!--
         <v-btn :disabled="!targetProxy || !girderRest || !girderRest.user" @click="upload">
           Upload
         </v-btn>
         <span v-show="!girderRest || !girderRest.user" class="body-2">Log in to upload</span>
+        -->
       </div>
     </v-card>
   </v-container>

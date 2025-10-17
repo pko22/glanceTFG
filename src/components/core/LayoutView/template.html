@@ -1,3 +1,4 @@
+<!-- Es el vitsorpropiamente dicho de vtk, permite alternar entre las vistas(coronal/sagital/axial/3d)-->
 <v-container fluid :class="$style.container">
   <div
     :class="$style.grid"
@@ -9,6 +10,7 @@
       v-bind:key="`${index}::${viewType}`"
       v-show="index < visibleCount"
     >
+      <!-- este componenete es el visro dentro del grid digamos, donde se vera las imagenes-->
       <vtk-view
         v-bind:view-type="viewType"
         v-bind:layout-index="index"

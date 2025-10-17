@@ -18,13 +18,13 @@
   </v-card>
   <v-card flat :class="$style.block" v-if="domains.opacity && domains.pointSize">
     <v-card-title flat :class="$style.blockTitle">
-      <span class="body-2">Mesh</span>
+      <span class="body-2">Malla</span>
     </v-card-title>
     <v-card-text :class="$style.blockContent">
       <v-container fluid grid-list-xs class="pa-0">
         <v-layout row wrap align-center>
           <v-flex xs3>
-            <label :class="$style.smallLabel">Point Size</label>
+            <label :class="$style.smallLabel">Tamaño de punto</label>
           </v-flex>
           <v-flex xs6>
             <v-slider
@@ -49,7 +49,7 @@
             />
           </v-flex>
           <v-flex xs3>
-            <label :class="$style.smallLabel">Opacity</label>
+            <label :class="$style.smallLabel">Opacidad</label>
           </v-flex>
           <v-flex xs6>
             <v-slider
@@ -80,13 +80,13 @@
   </v-card>
   <v-card flat :class="$style.block" v-if="domains.sampleDistance && domains.edgeGradient">
     <v-card-title flat :class="$style.blockTitle">
-      <span class="body-2">Shadow &amp; Edge</span>
+      <span class="body-2">Sombras y Aristas</span>
     </v-card-title>
     <v-card-text :class="$style.blockContent">
       <v-container fluid grid-list-xs class="pa-0">
         <v-layout row wrap align-center>
           <v-flex xs3>
-            <label :class="$style.smallLabel">Sample Distance</label>
+            <label :class="$style.smallLabel">Distancia de muestreo</label>
           </v-flex>
           <v-flex xs6>
             <v-slider
@@ -111,7 +111,7 @@
             />
           </v-flex>
           <v-flex xs3>
-            <label :class="$style.smallLabel">Edge Gradient</label>
+            <label :class="$style.smallLabel">Intensidad de Aristas</label>
           </v-flex>
           <v-flex xs6>
             <v-slider

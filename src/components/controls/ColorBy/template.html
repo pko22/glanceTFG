@@ -4,7 +4,7 @@
       <v-layout row wrap align-center>
         <template v-if="available === 'geometry'">
           <v-flex xs3>
-            <span class="body-2">Color By:</span>
+            <span class="body-2">Color por:</span>
           </v-flex>
           <v-flex xs9>
             <v-select
@@ -79,7 +79,7 @@
                   <v-icon>mdi-arrow-expand-horizontal</v-icon>
                 </v-btn>
               </template>
-              Reset range
+              Resetear Rango de colores
             </v-tooltip>
             <v-spacer v-else />
           </v-flex>
@@ -112,7 +112,7 @@
           <v-flex xs12 v-if="hasPresetOpacity">
             <v-layout row align-center>
               <v-flex xs3>
-                <span :class="$style.smallLabel">Shift</span>
+                <span :class="$style.smallLabel">Ajustar</span>
               </v-flex>
               <v-flex xs6>
                 <v-slider
@@ -168,7 +168,7 @@
               </v-icon>
             </v-flex>
             <v-flex xs10>
-              <span class="body-2">Interpolate scalar before mapping</span>
+              <span class="body-2">Interpolar el escalar antes de mapear</span>
             </v-flex>
           </v-layout>
         </v-flex>

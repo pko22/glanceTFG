@@ -1,7 +1,7 @@
 <v-container fluid :class="$style.container">
   <v-layout column :class="$style.floatToolbar">
     <v-tooltip left :disabled="smallScreen">
-      <span class="pv-no-select">Reset camera</span>
+      <span class="pv-no-select">Resetear Camara</span>
       <template v-slot:activator="{ on }">
         <v-btn icon dark v-on="on" v-on:click="resetCamera()">
           <v-icon>mdi-image-filter-center-focus</v-icon>
@@ -9,7 +9,7 @@
       </template>
     </v-tooltip>
     <v-tooltip left :disabled="smallScreen">
-      <span class="pv-no-select">Rotate camera left 90°</span>
+      <span class="pv-no-select">Rotar camara a la izquierda(90°)</span>
       <template v-slot:activator="{ on }">
         <v-btn icon dark v-on="on" v-on:click="rollLeft()">
           <v-icon>mdi-rotate-left</v-icon>
@@ -17,7 +17,7 @@
       </template>
     </v-tooltip>
     <v-tooltip left :disabled="smallScreen">
-      <span class="pv-no-select">Rotate camera right 90°</span>
+      <span class="pv-no-select">Rotar camara a la derecha(90º)</span>
       <template v-slot:activator="{ on }">
         <v-btn icon dark v-on="on" v-on:click="rollRight()">
           <v-icon>mdi-rotate-right</v-icon>
@@ -26,7 +26,7 @@
     </v-tooltip>
     <v-tooltip left v-if="type === 'View3D'" :disabled="smallScreen">
       <span class="pv-no-select"
-        >Reset Camera to Orientation {{orientationLabels[0]}}</span
+        >Resetear horientacion en eje: {{orientationLabels[0]}}</span
       >
       <template v-slot:activator="{ on }">
         <v-btn icon dark v-on="on" v-on:click="updateOrientation('x')">
@@ -36,7 +36,7 @@
     </v-tooltip>
     <v-tooltip left v-if="type === 'View3D'" :disabled="smallScreen">
       <span class="pv-no-select"
-        >Reset Camera to Orientation {{orientationLabels[1]}}</span
+        >Resetear horientacion en eje:{{orientationLabels[1]}}</span
       >
       <template v-slot:activator="{ on }">
         <v-btn icon dark v-on="on" v-on:click="updateOrientation('y')">
@@ -46,7 +46,7 @@
     </v-tooltip>
     <v-tooltip left v-if="type === 'View3D'" :disabled="smallScreen">
       <span class="pv-no-select"
-        >Reset Camera to Orientation {{orientationLabels[2]}}</span
+        >Resetear horientacion en eje: {{orientationLabels[2]}}</span
       >
       <template v-slot:activator="{ on }">
         <v-btn icon dark v-on="on" v-on:click="updateOrientation('z')">
@@ -123,10 +123,10 @@
               </v-list>
             </v-menu>
           </template>
-          <span class="pv-no-select">Change View Point</span>
+          <span class="pv-no-select">Cambiar punto de vista</span>
         </v-tooltip>
         <v-tooltip top :disabled="smallScreen">
-          <span class="pv-no-select">Background color</span>
+          <span class="pv-no-select">Color de fondo</span>
           <template v-slot:activator="{ on }">
             <v-btn
               :class="$style.button"
@@ -140,7 +140,7 @@
           </template>
         </v-tooltip>
         <v-tooltip top :disabled="smallScreen">
-          <span class="pv-no-select">Screenshot</span>
+          <span class="pv-no-select">Captura de Pantalla</span>
           <template v-slot:activator="{ on }">
             <v-btn
               :class="$style.button"
@@ -153,7 +153,7 @@
           </template>
         </v-tooltip>
         <v-tooltip top v-if="!smallScreen && singleViewButton" key="singleView">
-          <span class="pv-no-select">Single view</span>
+          <span class="pv-no-select">Vista unica</span>
           <template v-slot:activator="{ on }">
             <v-btn
               :class="$style.button"
@@ -166,7 +166,7 @@
           </template>
         </v-tooltip>
         <v-tooltip top v-if="!smallScreen && flipViewButton" key="flipView">
-          <span class="pv-no-select">Split view</span>
+          <span class="pv-no-select">Separar vista</span>
           <template v-slot:activator="{ on }">
             <v-btn
               :class="$style.button"
@@ -179,7 +179,7 @@
           </template>
         </v-tooltip>
         <v-tooltip top v-if="!smallScreen && quadViewButton" key="quadView">
-          <span class="pv-no-select">Quad view</span>
+          <span class="pv-no-select">Vista en cuadricula</span>
           <template v-slot:activator="{ on }">
             <v-btn
               :class="$style.button"

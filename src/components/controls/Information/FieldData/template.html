@@ -16,25 +16,25 @@
     />
     <v-container fluid grid-list-xs class="pa-0">
       <v-layout row align-center v-if="!!activeFieldName">
-        <v-flex xs6 class="body-2">Type:</v-flex>
+        <v-flex xs6 class="body-2">Tipo:</v-flex>
         <v-flex xs6 class="body-2" :class="$style.canSelect">
           {{ getActiveArray().getDataType() }}
         </v-flex>
       </v-layout>
       <v-layout row align-center v-if="!!activeFieldName">
-          <v-flex xs6 class="body-2">Min value:</v-flex>
+          <v-flex xs6 class="body-2">Valor min:</v-flex>
           <v-flex xs6 class="body-2" :class="$style.canSelect">
             {{ getActiveArray().getRange()[0].toFixed(3) }}
           </v-flex>
         </v-layout>
         <v-layout row align-center v-if="!!activeFieldName">
-          <v-flex xs6 class="body-2">Max value:</v-flex>
+          <v-flex xs6 class="body-2">Valor max:</v-flex>
           <v-flex xs6 class="body-2" :class="$style.canSelect">
             {{ getActiveArray().getRange()[1].toFixed(3) }}
           </v-flex>
         </v-layout>
         <v-layout row align-center v-if="!!activeFieldName">
-          <v-flex xs6 class="body-2"># of components:</v-flex>
+          <v-flex xs6 class="body-2"># de componenetes:</v-flex>
           <v-flex xs6 class="body-2" :class="$style.canSelect">
             {{ getActiveArray().getNumberOfComponents() }}
           </v-flex>

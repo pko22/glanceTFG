@@ -1,12 +1,15 @@
+
+<!-- Esto es el menu izquierdo vertical-->
+
 <v-tabs
   v-model="activeTab"
   centered
   grow
   :class="$style.tabsContainer"
 >
-  <v-tab>Datasets</v-tab>
-  <v-tab>Tools</v-tab>
-  <v-tab>Global</v-tab>
+  <v-tab>Archivos Cargados</v-tab>
+  <v-tab>Herramientas</v-tab>
+  <v-tab>Ajustes globales</v-tab>
   <v-tabs-items
     v-model="activeTab"
     touchless

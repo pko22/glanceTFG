@@ -14,17 +14,17 @@ import TextAnnotationTool from 'paraview-glance/src/components/tools/Measurement
 
 const ToolList = [
   {
-    name: '2D Angle',
+    name: 'Angulos 2D',
     icon: 'angle-tool',
     component: AngleMeasurementTool,
   },
   {
-    name: '2D Ruler',
+    name: 'Regla 2D',
     icon: 'length-tool',
     component: RulerMeasurementTool,
   },
   {
-    name: '2D Text',
+    name: 'Texto 2D',
     icon: 'text-tool',
     component: TextAnnotationTool,
   },
@@ -40,7 +40,7 @@ ToolList.forEach((tool) => {
 // ----------------------------------------------------------------------------
 
 export default {
-  name: 'MeasurementTools',
+  name: 'Herramientas de medida',
   props: ['enabled'],
   components: {
     PopUp,

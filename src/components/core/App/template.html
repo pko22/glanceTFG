@@ -207,7 +207,7 @@
           v-on:clear="errors = []"
         />
       </component>
-
+      <!-- es como un pequeño alert que sale debajo-->
       <v-snackbar
         :value="!!globalSingleNotification"
         @input="globalSingleNotification = ''"
@@ -217,7 +217,7 @@
         @click="globalSingleNotification = ''"
       >
         {{ globalSingleNotification }}
-        <v-btn text>close</v-btn>
+        <v-btn text>Cerrar</v-btn>
       </v-snackbar>
 
       <!-- portal mount point -->
