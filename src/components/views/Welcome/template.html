@@ -1,0 +1,77 @@
+<v-container
+  class="welcome-container"
+  fill-height
+  fluid
+>
+  <v-row
+    align="center"
+    justify="center"
+  >
+    <v-col
+      cols="12"
+      sm="8"
+      md="6"
+      class="text-center"
+    >
+      <v-card elevation="12" class="pa-8">
+        <v-card-title class="headline justify-center">
+          Bienvenido a Glance TFG
+        </v-card-title>
+        
+        <v-card-text class="mt-6">
+          <v-btn
+            color="primary"
+            large
+            block
+            class="mb-4"
+            @click="enterAnonymous"
+          >
+            Entrar Sin Login
+          </v-btn>
+
+          <v-divider class="my-4">o</v-divider>
+
+          <v-btn
+            color="secondary"
+            large
+            block
+            class="mb-4"
+            @click="showLogin = true"
+          >
+            Login
+          </v-btn>
+
+          <v-btn
+            color="success"
+            large
+            block
+            @click="showRegister = true"
+          >
+            Registrarse
+          </v-btn>
+        </v-card-text>
+      </v-card>
+
+      <!-- Dialogs para Login y Register -->
+      <v-dialog
+        v-model="showLogin"
+        max-width="400"
+      >
+        <Login
+          @login-success="handleLoginSuccess"
+          @back="showLogin = false"
+        />
+      </v-dialog>
+
+      <v-dialog
+        v-model="showRegister"
+        max-width="400"
+      >
+        <Register
+          @register-success="handleRegisterSuccess"
+          @back="showRegister = false"
+        />
+      </v-dialog>
+    </v-col>
+  </v-row>
+</v-container>

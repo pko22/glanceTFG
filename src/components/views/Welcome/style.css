@@ -1,0 +1,16 @@
+.welcome-container {
+  background: linear-gradient(to right, #2196F3, #21CBF3);
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.v-card {
+  border-radius: 16px;
+}
+
+.v-btn {
+  font-weight: bold;
+}

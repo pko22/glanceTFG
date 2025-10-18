@@ -19,6 +19,8 @@ import CollapsibleToolbarItem from 'paraview-glance/src/components/widgets/Colla
 
 import shortcuts from 'paraview-glance/src/shortcuts';
 
+import Welcome from 'paraview-glance/src/components/views/Welcome';
+
 // ----------------------------------------------------------------------------
 // Component API
 // ----------------------------------------------------------------------------
@@ -41,6 +43,9 @@ export default {
     SvgIcon,
     VBottomSheet,
     VDialog,
+
+    // Nuevos componentes de login/welcome
+    Welcome,
   },
   provide() {
     return {
@@ -60,6 +65,8 @@ export default {
       errors: [],
       globalSingleNotification: '',
       notifyPermanent: false,
+
+      currentScreen: 'welcome', // 'welcome','app'
     };
   },
   computed: {
@@ -204,6 +211,28 @@ export default {
         this.globalSingleNotification = msg;
         this.notifyPermanent = permanent;
       });
+    },
+
+    // Entrar sin login
+    enterAnonymous() {
+      this.currentScreen = 'app'; // Cambia a la app principal
+    },
+
+    // Login exitoso
+    loginSuccess(/* user */) {
+      this.currentScreen = 'app'; // Cambia a la app principal tras login
+      // opcional: guardar info del usuario en Vuex
+    },
+
+    // Registro exitoso
+    registerSuccess(/* user */) {
+      this.currentScreen = 'app'; // Cambia a la app principal tras registro
+      // opcional: guardar info del usuario en Vuex
+    },
+
+    // Volver al welcome (abria que borrar el usuario de Vuex)
+    logout() {
+      this.currentScreen = 'welcome';
     },
   },
 };

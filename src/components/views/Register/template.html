@@ -1,0 +1,42 @@
+<v-card class="pa-4" max-width="400">
+  <h2 class="text-center">Registro</h2>
+  <v-form ref="form" v-model="valid">
+    <!-- HE QUITADO EL USERNAME PERO AQLOMEJOR DEBERIA METERLO-->
+    <v-text-field
+      label="Email"
+      v-model="email"
+      :rules="[rules.required, rules.email]"
+      required
+    />
+    <v-text-field
+      label="Contraseña"
+      v-model="password"
+      :rules="[rules.required, rules.minLength]"
+      type="password"
+      required
+    />
+    <v-text-field
+      label="Confirmar Contraseña"
+      v-model="passwordConfirm"
+      :rules="[rules.required, rules.passwordMatch]"
+      type="password"
+      required
+    />
+    <v-btn 
+      color="secondary" 
+      block 
+      @click="registerSuccess()"
+      :disabled="!valid">
+      Registrarse
+    </v-btn>
+    <v-btn 
+      text 
+      block 
+      @click="$emit('back')">
+      Volver
+    </v-btn>
+  </v-form>
+</v-card>
+
+
+

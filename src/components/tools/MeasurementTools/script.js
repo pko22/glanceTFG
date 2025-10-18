@@ -40,7 +40,7 @@ ToolList.forEach((tool) => {
 // ----------------------------------------------------------------------------
 
 export default {
-  name: 'Herramientas de medida',
+  name: 'HerramientasDeMedida',
   props: ['enabled'],
   components: {
     PopUp,
