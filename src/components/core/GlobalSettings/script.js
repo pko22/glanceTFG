@@ -6,8 +6,8 @@ import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker'
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 
 const INTERACTION_STYLES_3D = [
-  { text: 'Default', value: '3D' },
-  { text: 'First Person', value: 'FirstPerson' },
+  { text: 'Por defecto', value: '3D' },
+  { text: 'Primera persona', value: 'FirstPerson' },
 ];
 
 const ORIENTATION_PRESETS = [
@@ -16,8 +16,8 @@ const ORIENTATION_PRESETS = [
 ];
 
 const AXIS_TYPES = [
-  { text: 'Arrows', value: 'arrow' },
-  { text: 'Cube', value: 'cube' },
+  { text: 'Flechas', value: 'arrow' },
+  { text: 'Cubo', value: 'cube' },
 ];
 
 // ----------------------------------------------------------------------------

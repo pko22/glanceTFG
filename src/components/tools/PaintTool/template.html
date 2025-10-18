@@ -3,7 +3,7 @@
     <v-layout wrap align-center>
       <v-flex xs12>
         <source-select
-          label="Select a Base Image"
+          label="Seleccionar imagen objetivo"
           :filterFunc="filterImageData"
           bindToActiveSource
           hideIfOneDataset
@@ -14,7 +14,7 @@
         <v-menu offset-x>
           <template v-slot:activator="{ on }">
             <v-select
-              label="Select a Labelmap"
+              label="Selecciona una capa de etiquetas"
               append-outer-icon="mdi-dots-vertical"
               :items="labelmaps"
               item-text="name"
@@ -29,15 +29,15 @@
           <v-list>
             <template v-if="labelmapSelection">
               <v-list-item @click="editName">
-                <v-list-item-title>Edit Name</v-list-item-title>
+                <v-list-item-title>Editar nombre</v-list-item-title>
               </v-list-item>
               <v-list-item @click="deleteLabelmap">
-                <v-list-item-title>Delete</v-list-item-title>
+                <v-list-item-title>Eliminar</v-list-item-title>
               </v-list-item>
             </template>
             <template v-else>
               <v-list-item>
-                <v-list-item-title>(no labelmap selected)</v-list-item-title>
+                <v-list-item-title>(no hay capa de etiqueta seleccionada)</v-list-item-title>
               </v-list-item>
             </template>
           </v-list>
@@ -46,7 +46,7 @@
       <template v-if="editingName">
         <v-flex xs10>
           <v-text-field
-            label="Renaming labelmap"
+            label="Renombrando la capa de etiqueta"
             v-model="editableLabelmapName"
           />
         </v-flex>
@@ -65,7 +65,7 @@
           :value="enabled"
           @change="$emit('enable', Boolean($event))"
           hide-details
-          label="Paint Mode"
+          label="Modo de Pintura"
           :disabled="!canPaint"
           :class="$style.paintSwitch"
         />
@@ -97,7 +97,7 @@
       align-center
     >
       <v-flex xs10 class="mt-1">
-        <label class="v-label theme--light" for="paint-2D-brush-toggle">2D Brush</label>
+        <label class="v-label theme--light" for="paint-2D-brush-toggle">Pincel 2D</label>
       </v-flex>
       <v-flex xs2 class="mt-1">
         <v-switch
@@ -109,7 +109,7 @@
       </v-flex>
       <v-flex xs12>
         <v-slider
-          label="Radius"
+          label="Radio"
           min="1"
           :max="brushSizeMax"
           step="1"
@@ -136,7 +136,7 @@
       <v-flex xs12>
         <v-list :class="$style.fullWidth">
           <v-subheader :class="$style.headerRow">
-            <span class="black--text subtitle-1 body-2">Labels</span>
+            <span class="black--text subtitle-1 body-2">Etiquetas</span>
             <v-spacer />
             <v-btn
               :class="$style.lowercaseText"
@@ -144,7 +144,7 @@
               @click="addLabel"
             >
               <v-icon small color="blue">mdi-plus-circle</v-icon>
-              <span class="pl-2 grey--text text--darken-2">Add Label</span>
+              <span class="pl-2 grey--text text--darken-2">Añadir etiqueta</span>
             </v-btn>
           </v-subheader>
           <v-radio-group
@@ -171,7 +171,7 @@
                         :style="colorToBackgroundCSS(colormapArray, 0)"
                       />
                     </div>
-                    <span class="pl-1">Eraser</span>
+                    <span class="pl-1">Goma de borrar</span>
                   </template>
                   <template v-else>
                     <pop-up class="flex-grow-0 flex-shrink-1">
@@ -207,7 +207,7 @@
                         </div>
                       </template>
                     </pop-up>
-                    <span class="pl-1">Label {{ labelData.label }}</span>
+                    <span class="pl-1">Etiqueta {{ labelData.label }}</span>
                   </template>
                 </v-list-item-content>
                 <v-list-item-action>
@@ -226,6 +226,9 @@
           </v-radio-group>
         </v-list>
       </v-flex>
+      <!-- Esto no lo implementare-->
+
+      <!---
       <v-btn
         :disabled="!girderRest || !girderRest.user"
         @click="upload()"
@@ -233,6 +236,7 @@
         Upload
       </v-btn>
       <span v-show="!girderRest || !girderRest.user" class="body-2">Log in to upload</span>
+      -->
     </v-layout>
   </v-container>
 </div>

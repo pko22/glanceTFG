@@ -1,7 +1,7 @@
 <v-container :class="$style.container">
   <v-card flat :class="$style.card" v-if="isAnimated">
     <div :class="$style.heading">
-      <span class="subtitle-2">Animation controls</span>
+      <span class="subtitle-2">Control de animaciones</span>
     </div>
     <v-divider class="mb-4" />
     <animationControls />
@@ -9,13 +9,13 @@
 
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
-      <span class="subtitle-2">General Settings</span>
+      <span class="subtitle-2">Ajustes generales</span>
     </div>
     <v-divider class="mb-4" />
     <v-container grid-list-xs class="pa-0">
       <v-layout row align-center class="pt-1">
         <v-flex xs10>
-          <span class="body-2">Default collapse datasets</span>
+          <span class="body-2">Colapsar archivos cargados por defecto</span>
         </v-flex>
         <v-flex xs2>
           <v-switch
@@ -31,13 +31,13 @@
   <!-- measurement unit selection -->
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
-      <span class="subtitle-2">Measurements</span>
+      <span class="subtitle-2">Unidades de medida</span>
     </div>
     <v-divider class="mb-4" />
     <v-container grid-list-xs class="pa-0">
       <v-layout row align-center class="pt-1">
         <v-flex xs9>
-          <span class="body-2">Distance unit symbol</span>
+          <span class="body-2">Medida de distancia</span>
         </v-flex>
         <v-flex xs3>
           <v-text-field
@@ -49,7 +49,7 @@
           />
         </v-flex>
         <v-flex xs9>
-          <span class="body-2">Distance unit factor</span>
+          <span class="body-2">Factor de distancia</span>
         </v-flex>
         <v-flex xs3>
           <v-text-field
@@ -69,7 +69,7 @@
 
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
-      <span class="subtitle-2">Background</span>
+      <span class="subtitle-2">Color de fondo</span>
     </div>
     <v-divider class="mb-4" />
     <palette-picker
@@ -80,7 +80,7 @@
   </v-card>
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
-      <span class="subtitle-2">Interaction Style</span>
+      <span class="subtitle-2">Estilos de interaccion 3D</span>
     </div>
     <v-divider :class="$style.divider" />
     <v-container grid-list-xs class="pa-0">
@@ -101,7 +101,7 @@
         </v-flex>
         <v-flex xs6>
           <span class="body-2" v-if="firstPersonInteraction">
-            Movement Speed
+            Velocidad de movimiento en primera persona
           </span>
         </v-flex>
         <v-flex xs6>
@@ -120,13 +120,13 @@
   </v-card>
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
-      <span class="subtitle-2">Overlay</span>
+      <span class="subtitle-2">Superposicion de herramientas</span>
     </div>
     <v-divider :class="$style.divider" />
     <v-container grid-list-xs class="pa-0">
       <v-layout row align-center class="pt-1">
         <v-flex xs6>
-          <span class="body-2">Text opacity</span>
+          <span class="body-2">Opacidad del texto</span>
         </v-flex>
         <v-flex xs6>
           <v-slider
@@ -146,7 +146,7 @@
       <v-container grid-list-xs class="pa-0">
         <v-layout row align-center>
           <v-flex xs10>
-            <span class="subtitle-2">Orientation Axis</span>
+            <span class="subtitle-2">Eje de horientacion</span>
           </v-flex>
           <v-flex xs2>
             <v-switch
@@ -162,7 +162,7 @@
     <v-container grid-list-xs class="pa-0">
       <v-layout row align-center class="pt-1">
         <v-flex xs3>
-          <span class="body-2">Type</span>
+          <span class="body-2">Tipo</span>
         </v-flex>
         <v-flex xs9>
           <v-select
@@ -179,7 +179,7 @@
       </v-layout>
       <v-layout row align-center class="pt-1">
         <v-flex xs3>
-          <span class="body-2">Preset</span>
+          <span class="body-2">Preseleccion</span>
         </v-flex>
         <v-flex xs9>
           <v-select
@@ -201,7 +201,7 @@
       <v-container grid-list-xs class="pa-0">
         <v-layout row align-center>
           <v-flex xs10>
-            <span class="subtitle-2">Virtual Reality</span>
+            <span class="subtitle-2">Realidad virtual</span>
           </v-flex>
           <v-flex xs2>
             <v-switch
@@ -218,7 +218,7 @@
     <v-container grid-list-xs class="pa-0">
       <v-layout row align-center class="pt-1" wrap>
         <v-flex xs5>
-          <span class="body-2">Physical scale</span>
+          <span class="body-2">Escala fisica</span>
         </v-flex>
         <v-flex xs7>
           <v-slider
@@ -235,13 +235,13 @@
   </v-card>
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
-      <span class="subtitle-2">LOD Settings</span>
+      <span class="subtitle-2">Nivel de detalle</span>
     </div>
     <v-divider :class="$style.divider" />
     <v-container grid-list-xs class="pa-0">
       <v-layout row align-center class="pt-1">
         <v-flex xs7>
-          <span class="body-2">Max Texture LOD Size</span>
+          <span class="body-2">Tamaño de texturas maximo</span>
         </v-flex>
         <v-flex xs5>
           <v-text-field

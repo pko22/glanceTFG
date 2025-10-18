@@ -54,6 +54,7 @@ function createLabelMapFromImage(imageData) {
 
 export default {
   name: 'PaintTool',
+  // esto nos sobra
   inject: ['girderRest'],
   components: {
     PalettePicker,
@@ -86,7 +87,7 @@ export default {
     labelmaps() {
       return [
         {
-          name: 'Create new labelmap',
+          name: 'Crear nueva capa de etiquetas',
           sourceId: NEW_LABELMAP,
         },
       ].concat(this.internalLabelmaps);

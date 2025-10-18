@@ -125,6 +125,59 @@
           </template>
           <span class="pv-no-select">Cambiar punto de vista</span>
         </v-tooltip>
+
+
+        <!-- Aqui quiero meter los botones de subir a alamcen privado/ DEFACE/ Subir a almacen publico(solo activo si has hecho deface)-->
+        
+        <!-- Botón para subir al almacén privado -->
+        <v-tooltip top :disabled="smallScreen">
+          <span class="pv-no-select">Subir a almacén privado</span>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              :class="$style.button"
+              icon
+              :disabled="!view"
+              v-on="on"
+              @click="uploadPrivate"
+            >
+              <v-icon>mdi-upload-lock</v-icon>
+            </v-btn>
+          </template>
+        </v-tooltip>
+
+        <!-- Botón para hacer deface -->
+        <v-tooltip top :disabled="smallScreen">
+          <span class="pv-no-select">Deface</span>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              :class="$style.button"
+              icon
+              :disabled="!view"
+              v-on="on"
+              @click="doDeface"
+            >
+              <v-icon>mdi-face-man-shimmer-outline</v-icon>
+            </v-btn>
+          </template>
+        </v-tooltip>
+
+        <!-- Botón para subir al almacén público -->
+        <v-tooltip top :disabled="smallScreen">
+          <span class="pv-no-select">Subir a almacén público</span>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              :class="$style.button"
+              icon
+              :disabled="!view"
+              v-on="on"
+              @click="uploadPublic"
+            >
+              <v-icon>mdi-upload</v-icon>
+            </v-btn>
+          </template>
+        </v-tooltip>
+
+
         <v-tooltip top :disabled="smallScreen">
           <span class="pv-no-select">Color de fondo</span>
           <template v-slot:activator="{ on }">
