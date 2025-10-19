@@ -1,3 +1,5 @@
+import { mapActions } from 'vuex';
+
 export default {
   name: 'Login',
   data() {
@@ -12,12 +14,21 @@ export default {
     };
   },
   methods: {
-    loginSuccess() {
-      const user = {
-        email: this.email,
-        password: this.password,
-      };
-      this.$emit('login-success', user);
+    ...mapActions(['loginLocal']),
+
+    async loginSuccess() {
+      try {
+        // Llamar a la acción de Vuex para login local
+        await this.loginLocal({
+          username: this.email,
+          password: this.password,
+        });
+        // Emitir al componente padre que el login ha sido exitoso
+        this.$emit('login-success');
+      } catch (err) {
+        console.error('Error login local:', err);
+        alert('Usuario o contraseña incorrectos');
+      }
     },
   },
 };
