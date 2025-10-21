@@ -12,7 +12,12 @@ export default {
     return {
       showLogin: false,
       showRegister: false,
+      showLoginSuccess: false,
+      user: null,
     };
+  },
+  mounted() {
+    this.checkAuthSuccess();
   },
   methods: {
     async enterAnonymous() {
@@ -25,8 +30,17 @@ export default {
         console.error('Error al obtener archivos públicos:', error);
       }
     },
-    handleLoginSuccess() {
-      this.$emit('login-success');
+    handleLoginSuccess(user) {
+      this.user = user;
+      this.showLoginSuccess = true;
+
+      // Oculta la pantalla de login success después de 3 segundos
+      /*
+      setTimeout(() => {
+        this.showLoginSuccess = false;
+        this.$emit('login-success');
+      }, 3000);
+      */
     },
     handleRegisterSuccess() {
       this.$emit('register-success');
@@ -35,6 +49,22 @@ export default {
       // Redirige al endpoint OAuth2 de tu backend
       window.location.href =
         'http://localhost:8080/oauth2/authorization/google';
+    },
+    async checkAuthSuccess() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('auth') === 'success') {
+        try {
+          const response = await api.get('/auth/login/success');
+          const user = response.data;
+          localStorage.setItem('jwt', user.token);
+
+          console.log('Foto de usuario:', response.data.picture);
+
+          this.handleLoginSuccess(user);
+        } catch (error) {
+          console.error('Error al obtener datos de login:', error);
+        }
+      }
     },
   },
 };
