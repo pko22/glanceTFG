@@ -14,17 +14,18 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['loginLocal']),
+    ...mapActions('auth', ['loginLocal']),
 
-    async loginSuccess() {
+    async login() {
       try {
         // Llamar a la acción de Vuex para login local
-        await this.loginLocal({
+        const userData = await this.loginLocal({
           username: this.email,
           password: this.password,
         });
-        // Emitir al componente padre que el login ha sido exitoso
-        this.$emit('login-success');
+
+        // Emitimos al componente padre con los datos del usuario
+        this.$emit('login-success', userData);
       } catch (err) {
         console.error('Error login local:', err);
         alert('Usuario o contraseña incorrectos');

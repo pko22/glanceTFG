@@ -16,11 +16,13 @@
 }
 
 .login-success-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh; /* altura de pantalla para centrar verticalmente */
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 80vh !important;
+  background-color: #f0f0f0 !important;
 }
+
 
 .user-info-card {
   display: flex;

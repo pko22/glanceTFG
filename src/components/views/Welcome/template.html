@@ -1,9 +1,15 @@
 <!-- Vista de login success -->
 <div v-if="showLoginSuccess" class="login-success-container">
   <div v-if="user" class="user-info">
-    <img :src="user.picture" alt="Foto de usuario" class="user-picture" />
+    <img v-if="user.picture" :src="user.picture" alt="Foto de usuario" class="user-picture" />
     <h2 class="user-name">¡Bienvenido, {{ user.name }}!</h2>
-    <p class="user-email">{{ user.email }}</p>
+    <p v-if="user.email"class="user-email">{{ user.email }}</p>
+  </div>
+</div>
+<div v-else-if="showRegisterSuccess" class="login-success-container">
+  <div v-if="user" class="user-info">
+    <h2 class="user-name">Usuario registrado correctamente: {{ user.name }}!</h2>
+    <p v-if="user.email"class="user-email">{{ user.email }}</p>
   </div>
 </div>
 

@@ -18,7 +18,7 @@ import CollapsibleToolbar from 'paraview-glance/src/components/widgets/Collapsib
 import CollapsibleToolbarItem from 'paraview-glance/src/components/widgets/CollapsibleToolbar/Item';
 
 import shortcuts from 'paraview-glance/src/shortcuts';
-
+import api from 'paraview-glance/src/api/api';
 import Welcome from 'paraview-glance/src/components/views/Welcome';
 
 // ----------------------------------------------------------------------------
@@ -221,17 +221,23 @@ export default {
     // Login exitoso
     loginSuccess(/* user */) {
       this.currentScreen = 'app'; // Cambia a la app principal tras login
-      // opcional: guardar info del usuario en Vuex
     },
 
     // Registro exitoso
     registerSuccess(/* user */) {
       this.currentScreen = 'app'; // Cambia a la app principal tras registro
-      // opcional: guardar info del usuario en Vuex
     },
 
     // Volver al welcome (abria que borrar el usuario de Vuex)
-    logout() {
+    async logout() {
+      try {
+        await api.post('/auth/logout');
+        console.log('Sesión de backend limpiada.');
+      } catch (error) {
+        console.warn('Advertencia al limpiar sesión de backend:', error);
+      }
+
+      this.$store.dispatch('auth/logout');
       this.currentScreen = 'welcome';
     },
   },

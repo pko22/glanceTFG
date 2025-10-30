@@ -25,10 +25,13 @@
     <v-btn 
       color="secondary" 
       block 
-      @click="registerSuccess()"
+      @click="registerUser()"
       :disabled="!valid">
       Registrarse
     </v-btn>
+    <div v-if="serverError" class="red--text mt-3">
+        ⚠️ {{ serverError }}
+    </div>
     <v-btn 
       text 
       block 

@@ -21,6 +21,8 @@ import {
   createRepresentationInAllViews,
 } from 'paraview-glance/src/utils';
 
+import auth from 'paraview-glance/src/store/auth';
+
 const STATE_VERSION = 2;
 
 // http://jsperf.com/typeofvar
@@ -108,6 +110,7 @@ function createStore(injected) {
       views: views({ proxyManager, girder }),
       widgets: widgets({ proxyManager, girder }),
       animations: animations({ animationManager }),
+      auth,
     },
     mutations: {
       showLanding(state) {

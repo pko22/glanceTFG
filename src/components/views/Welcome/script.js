@@ -13,6 +13,7 @@ export default {
       showLogin: false,
       showRegister: false,
       showLoginSuccess: false,
+      showRegisterSuccess: false,
       user: null,
     };
   },
@@ -25,6 +26,7 @@ export default {
         const response = await api.get('/files/public');
         const archivos = response.data;
         console.log('Archivos públicos:', archivos);
+
         this.$emit('enter-anonymous', archivos);
       } catch (error) {
         console.error('Error al obtener archivos públicos:', error);
@@ -34,18 +36,22 @@ export default {
       this.user = user;
       this.showLoginSuccess = true;
 
-      // Oculta la pantalla de login success después de 3 segundos
-      /*
       setTimeout(() => {
         this.showLoginSuccess = false;
         this.$emit('login-success');
       }, 3000);
-      */
     },
-    handleRegisterSuccess() {
-      this.$emit('register-success');
+    handleRegisterSuccess(user) {
+      this.user = user;
+      this.showRegisterSuccess = true;
+
+      setTimeout(() => {
+        this.showRegisterSuccess = false;
+        this.$emit('register-success');
+      }, 3000);
     },
     loginWithGoogle() {
+      localStorage.removeItem('jwt');
       // Redirige al endpoint OAuth2 de tu backend
       window.location.href =
         'http://localhost:8080/oauth2/authorization/google';
