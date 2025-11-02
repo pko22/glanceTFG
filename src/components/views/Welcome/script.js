@@ -23,11 +23,7 @@ export default {
   methods: {
     async enterAnonymous() {
       try {
-        const response = await api.get('/files/public');
-        const archivos = response.data;
-        console.log('Archivos públicos:', archivos);
-
-        this.$emit('enter-anonymous', archivos);
+        this.$emit('enter-anonymous');
       } catch (error) {
         console.error('Error al obtener archivos públicos:', error);
       }

@@ -69,34 +69,69 @@
   <v-container class="mt-4 pv-no-select" grid-list-lg>
     <v-layout row wrap>
       <v-flex xs12>
-        <span class="title">Datos de ejemplo</span>
+        <span class="title">Datos disponibles</span>
       </v-flex>
+
+      <!-- Iteramos sobre los samples que vienen del backend -->
       <v-flex
         v-for="(sample, i) in samples"
-        :key="i"
+        :key="sample.id"
         :xs4="$vuetify.breakpoint.mdAndUp"
         :xs6="$vuetify.breakpoint.sm"
         :xs12="$vuetify.breakpoint.xs"
       >
         <v-card :class="$style.sampleData" flat tile>
-          <v-img :src="sample.image" height="300px" />
-          <div
-            :class="$style.linkOverlay"
-            @click.stop="openSample(sample)"
+          <!-- Imagen cargada desde el backend -->
+          <v-img
+            :src="sample.image"
+            height="300px"
+            :alt="sample.label"
+            class="mb-2"
           >
-            <div :class="$style.linkOverlayText" class="body-2">
-              {{ sample.label }} ({{ sample.size }})
-              <div :class="$style.description" v-if="sample.description">
-                {{ sample.description }}
-              </div>
-              <div :class="$style.acknowledgement" v-if="sample.acknowledgement">
-                {{ sample.acknowledgement }}
-              </div>
+            <!-- En caso de que falle la imagen -->
+            <template #placeholder>
+              <v-row
+                class="fill-height ma-0"
+                align="center"
+                justify="center"
+              >
+                <v-progress-circular indeterminate color="primary" />
+              </v-row>
+            </template>
+          </v-img>
+
+          <!-- Contenido de texto -->
+          <v-card-text>
+            <h3 class="font-weight-medium mb-2">{{ sample.label }}</h3>
+            <p class="text--secondary mb-1">{{ sample.description }}</p>
+            <p class="text--disabled text-caption">
+              {{ sample.size || 'Tamaño desconocido' }}
+            </p>
+
+            <!-- Acknowledgement (opcional) -->
+            <div
+              v-if="sample.acknowledgement"
+              class="text-caption mt-2"
+              style="opacity: 0.7"
+            >
+              {{ sample.acknowledgement }}
             </div>
-          </div>
+          </v-card-text>
+
+          <!-- Overlay para abrir el sample -->
+          <v-card-actions>
+            <v-btn
+              color="primary"
+              text
+              @click.stop="openSample(sample)"
+            >
+              Abrir muestra
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </v-flex>
     </v-layout>
   </v-container>
+
 
 </div>

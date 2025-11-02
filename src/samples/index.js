@@ -5,11 +5,6 @@ const version =
     ? window.GLANCE_VERSION
     : 'master';
 
-/*
-  AQUI MOLARIA TENER UN BACKEND QUE ME RECOJA UNA PETICION Y ME DE LOS ARCHIVOS .GLANCE/.VTI/.DCM/...
-  Esto tendre que hacerlo mas adelante, por ahora lo hago a pelo desde la carpeta /static que segun el webpack
-  si que se expone en el navegador
-*/
 // prettier-ignore
 export default [
   {
