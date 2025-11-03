@@ -16,6 +16,10 @@ export default {
         passwordMatch: (v) =>
           v === this.password || 'Las contraseñas no coinciden',
       },
+
+      snackbar: false,
+      snackbarMessage: '',
+      snackbarColor: 'error',
     };
   },
   methods: {
@@ -30,7 +34,7 @@ export default {
         !this.password ||
         this.password !== this.passwordConfirm
       ) {
-        alert('Verifica los campos antes de continuar.');
+        this.showSnackbar('Verifica los campos antes de continuar.', 'error');
         return;
       }
 
@@ -45,7 +49,13 @@ export default {
       } catch (err) {
         this.serverError = err.message || 'Error desconocido al registrarse.';
         console.error('Error detallado en registro:', err);
+        this.showSnackbar(this.serverError, 'error');
       }
+    },
+    showSnackbar(message, color) {
+      this.snackbarMessage = message;
+      this.snackbarColor = color;
+      this.snackbar = true;
     },
   },
 };

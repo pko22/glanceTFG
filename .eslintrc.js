@@ -20,6 +20,9 @@ module.exports = {
         config: 'build/webpack.dev.config.js',
       },
     },
+    react: {
+      version: 'detect', // eslint-plugin-react lo ignora si no está instalado
+    },
   },
   rules: {
     'prettier/prettier': ['error', prettierConf],

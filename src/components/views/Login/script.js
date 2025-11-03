@@ -11,6 +11,10 @@ export default {
         required: (v) => !!v || 'Campo requerido',
         email: (v) => /.+@.+\..+/.test(v) || 'Debe ser un email válido',
       },
+
+      snackbar: false,
+      snackbarMessage: '',
+      snackbarColor: 'error', // 'success' para éxito
     };
   },
   methods: {
@@ -28,7 +32,10 @@ export default {
         this.$emit('login-success', userData);
       } catch (err) {
         console.error('Error login local:', err);
-        alert('Usuario o contraseña incorrectos');
+        // Mostrar snackbar de error
+        this.snackbarMessage = 'Usuario o contraseña incorrectos';
+        this.snackbarColor = 'error';
+        this.snackbar = true;
       }
     },
   },

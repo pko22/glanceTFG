@@ -144,6 +144,8 @@ module.exports = {
           urlPattern: /(\.css|\.ttf|\.eot|\.woff|\.js|\.png|\.svg|\.wasm)$/,
         },
       ],
+      maximumFileSizeToCacheInBytes: 50 * 1024 * 1024, // 50 MB
+
     }),
   ],
   resolve: {

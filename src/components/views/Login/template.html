@@ -1,33 +1,56 @@
-<v-card class="pa-4" max-width="400">
-  <h2 class="text-center">Login</h2>
-  <v-form ref="form" v-model="valid">
-    <v-text-field
-      label="Email"
-      v-model="email"
-      :rules="[rules.required, rules.email]"
-      required
-    />
-    <v-text-field
-      label="Contraseña"
-      v-model="password"
-      :rules="[rules.required]"
-      type="password"
-      required
-    />
-    <v-btn 
-      color="primary" 
-      block 
-      @click="login()" 
-      :disabled="!valid">
-      Entrar
-    </v-btn>
-    <v-btn 
-      text 
-      block 
-      @click="$emit('back')">
-      Volver
-    </v-btn>
-  </v-form>
-</v-card>
+<div>
+  <v-card class="pa-4" max-width="400">
+    <h2 class="text-center">Login</h2>
+    <v-form ref="form" v-model="valid">
+      <v-text-field
+        label="Email"
+        v-model="email"
+        :rules="[rules.required, rules.email]"
+        required
+      />
+      <v-text-field
+        label="Contraseña"
+        v-model="password"
+        :rules="[rules.required]"
+        type="password"
+        required
+      />
+      <v-btn 
+        color="primary" 
+        block 
+        @click="login()" 
+        :disabled="!valid">
+        Entrar
+      </v-btn>
+      <v-btn 
+        text 
+        block 
+        @click="$emit('back')">
+        Volver
+      </v-btn>
+    </v-form>
+  </v-card>
+
+  <v-snackbar
+    v-model="snackbar"
+    :color="snackbarColor"
+    timeout="5000"
+    top
+    right
+  >
+    {{ snackbarMessage }}
+    <template #action="{ attrs }">
+      <v-btn
+        color="white"
+        text
+        v-bind="attrs"
+        @click="snackbar = false"
+      >
+        Cerrar
+      </v-btn>
+    </template>
+  </v-snackbar>
+</div>
+
 
 
