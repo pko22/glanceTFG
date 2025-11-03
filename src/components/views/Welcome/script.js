@@ -1,6 +1,5 @@
 import Login from 'paraview-glance/src/components/views/Login';
 import Register from 'paraview-glance/src/components/views/Register';
-import api from 'paraview-glance/src/api/api';
 
 export default {
   name: 'Welcome',
@@ -55,16 +54,23 @@ export default {
     async checkAuthSuccess() {
       const params = new URLSearchParams(window.location.search);
       if (params.get('auth') === 'success') {
-        try {
-          const response = await api.get('/auth/login/success');
-          const user = response.data;
-          localStorage.setItem('jwt', user.token);
+        const token = params.get('token');
+        const name = decodeURIComponent(params.get('name') || '');
+        const picture = decodeURIComponent(params.get('picture') || '');
 
-          console.log('Foto de usuario:', response.data.picture);
+        if (token) {
+          // Guarda el token en localStorage
+          localStorage.setItem('jwt', token);
+
+          // Crea el objeto de usuario
+          const user = { name, picture, token };
+
+          // Limpia la URL (opcional pero recomendable)
+          window.history.replaceState({}, document.title, '/');
+
+          console.log('Login con Google exitoso:', user);
 
           this.handleLoginSuccess(user);
-        } catch (error) {
-          console.error('Error al obtener datos de login:', error);
         }
       }
     },
