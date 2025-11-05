@@ -4,6 +4,9 @@ import { VBottomSheet, VDialog } from 'vuetify/lib';
 import macro from '@kitware/vtk.js/macro';
 
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
+
+import UserCrudBox from 'paraview-glance/src/components/views/userCrudBox';
+
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
 import ControlsDrawer from 'paraview-glance/src/components/core/ControlsDrawer';
 import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
@@ -29,6 +32,9 @@ export default {
   name: 'App',
   components: {
     AboutBox,
+
+    UserCrudBox,
+
     BrowserIssues,
     CollapsibleToolbar,
     CollapsibleToolbarItem,
@@ -67,6 +73,7 @@ export default {
       notifyPermanent: false,
 
       currentScreen: 'welcome', // 'welcome','app'
+      userCrudDialog: false, // Diálogo de gestión de perfil
     };
   },
   computed: {
@@ -80,6 +87,10 @@ export default {
         }
       },
     },
+    ...mapGetters('auth', {
+      isLoggedIn: 'isLoggedIn',
+      user: 'getUser',
+    }),
     ...mapState({
       loadingState: 'loadingState',
       landingVisible: (state) => state.route === 'landing',
@@ -116,6 +127,11 @@ export default {
     });
     this.initViews();
     this.initializeAnimations();
+
+    // Verificar login guardado
+    if (this.isLoggedIn) {
+      this.currentScreen = 'app';
+    }
 
     // attach keyboard shortcuts
     shortcuts.forEach(({ key, action }) =>

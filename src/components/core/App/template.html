@@ -115,6 +115,16 @@
                 <span v-show="state !== 'dense'">Info de la app</span>
               </collapsible-toolbar-item>
 
+
+              <collapsible-toolbar-item
+                v-if="isLoggedIn"
+                v-on:click="userCrudDialog= true"
+                :state="state"
+              >
+                <v-icon left>mdi-account-cog</v-icon>
+                <span v-show="state !== 'dense'">Gestión de Perfil</span>
+              </collapsible-toolbar-item>
+
               <collapsible-toolbar-item
                 v-on:click="logout()"
               >
@@ -214,6 +224,15 @@
           max-width="50%"
         >
           <about-box v-on:close="aboutDialog = false" />
+        </component>
+        
+        <!-- Dialog con CRUD del usuario  -->
+        <component
+          :is="dialogType"
+          v-model="userCrudDialog"
+          max-width="50%"
+        >
+          <userCrud-box v-on:close="userCrudDialog = false" />
         </component>
 
         <!-- error dialog-->
