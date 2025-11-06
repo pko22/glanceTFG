@@ -127,55 +127,112 @@
         </v-tooltip>
 
 
-        <!-- Aqui quiero meter los botones de subir a alamcen privado/ DEFACE/ Subir a almacen publico(solo activo si has hecho deface)-->
+        <!-- Aqui quiero meter los botones de subir a alamcen privado/ DEFACE/ Subir a almacen publico(solo activo si has hecho deface y login)-->
         
-        <!-- Botón para subir al almacén privado -->
-        <v-tooltip top :disabled="smallScreen">
-          <span class="pv-no-select">Subir a almacén privado</span>
-          <template v-slot:activator="{ on }">
-            <v-btn
-              :class="$style.button"
-              icon
-              :disabled="!view"
-              v-on="on"
-              @click="uploadPrivate"
-            >
-              <v-icon>mdi-upload-lock</v-icon>
-            </v-btn>
-          </template>
-        </v-tooltip>
+         <template v-if="isLoggedIn">
 
-        <!-- Botón para hacer deface -->
-        <v-tooltip top :disabled="smallScreen">
-          <span class="pv-no-select">Deface</span>
-          <template v-slot:activator="{ on }">
-            <v-btn
-              :class="$style.button"
-              icon
-              :disabled="!view"
-              v-on="on"
-              @click="doDeface"
-            >
-              <v-icon>mdi-face-man-shimmer-outline</v-icon>
-            </v-btn>
-          </template>
-        </v-tooltip>
+          <!-- Botón para subir al almacén privado -->
+          <v-tooltip top :disabled="smallScreen">
+            <span class="pv-no-select">Subir a almacén privado</span>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                :class="$style.button"
+                icon
+                :disabled="!view"
+                v-on="on"
+                @click="uploadPrivate"
+              >
+                <v-icon>mdi-upload-lock</v-icon>
+              </v-btn>
+            </template>
+          </v-tooltip>
 
-        <!-- Botón para subir al almacén público -->
-        <v-tooltip top :disabled="smallScreen">
-          <span class="pv-no-select">Subir a almacén público</span>
-          <template v-slot:activator="{ on }">
-            <v-btn
-              :class="$style.button"
-              icon
-              :disabled="!view"
-              v-on="on"
-              @click="uploadPublic"
-            >
-              <v-icon>mdi-upload</v-icon>
-            </v-btn>
-          </template>
-        </v-tooltip>
+          <v-dialog v-model="dialogUpload" max-width="500px">
+            <v-card>
+              <v-card-title>Subir al almacén privado</v-card-title>
+              <v-card-text>
+                  <!-- Label (nombre descriptivo) -->
+                <v-text-field
+                  label="Etiqueta o título"
+                  v-model="label"
+                  outlined
+                  dense
+                  required
+                ></v-text-field>
+                  <!-- Descripción -->
+                <v-textarea
+                  label="Descripción"
+                  v-model="description"
+                  outlined
+                  dense
+                  rows="2"
+                ></v-textarea>
+                  <!-- Reconocimiento -->
+                <v-text-field
+                  label="Acknowledgement (reconocimiento, si aplica)"
+                  v-model="acknowledgement"
+                  outlined
+                  dense
+                ></v-text-field>
+
+                <!-- Imagen asociada -->
+                <v-radio-group v-model="uploadOption" row>
+                  <v-radio label="Usar captura de pantalla" value="screenshot"></v-radio>
+                  <v-radio label="Subir imagen" value="upload"></v-radio>
+                </v-radio-group>
+
+                <v-file-input
+                  v-if="uploadOption === 'upload'"
+                  v-model="selectedImage"
+                  label="Selecciona una imagen"
+                  accept="image/*"
+                  outlined
+                ></v-file-input>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn text color="grey" @click="dialogUpload = false">Cancelar</v-btn>
+                <v-btn color="primary" @click="confirmUpload">Subir</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+
+          <!-- Botón para hacer deface -->
+          <v-tooltip top :disabled="smallScreen">
+            <span class="pv-no-select">Deface</span>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                :class="$style.button"
+                icon
+                :disabled="!view"
+                v-on="on"
+              >
+                <!--@click="doDeface"-->
+
+                <v-icon>mdi-face-man-shimmer-outline</v-icon>
+              </v-btn>
+            </template>
+          </v-tooltip>
+
+          <!-- Botón para subir al almacén público -->
+          <v-tooltip top :disabled="smallScreen">
+            <span class="pv-no-select">Subir a almacén público</span>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                :class="$style.button"
+                icon
+                :disabled="!view"
+                v-on="on"
+              >
+                <!--@click="uploadPublic"-->
+
+                <v-icon>mdi-upload</v-icon>
+              </v-btn>
+            </template>
+          </v-tooltip>
+        </template>
 
 
         <v-tooltip top :disabled="smallScreen">

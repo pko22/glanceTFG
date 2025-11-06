@@ -15,6 +15,7 @@ import files, { getExtension } from 'paraview-glance/src/store/fileLoader';
 import views from 'paraview-glance/src/store/views';
 import widgets from 'paraview-glance/src/store/widgets';
 import animations from 'paraview-glance/src/store/animations';
+import api from 'paraview-glance/src/api/api';
 
 import {
   wrapMutationAsAction,
@@ -226,6 +227,110 @@ function createStore(injected) {
             .then(() => commit('savingState', null));
         });
       },
+      postState({ commit, state }, payload = {}) {
+        // payload contendrá los campos adicionales (label, description, imagen, etc.)
+        return new Promise((resolve, reject) => {
+          const t = new Date();
+          const fileName = `${t.getFullYear()}${
+            t.getMonth() + 1
+          }${t.getDate()}_${t.getHours()}-${t.getMinutes()}-${t.getSeconds()}.glance`;
+          console.log('El nombre es:-------------------->', fileName);
+          commit('savingState', fileName);
+
+          const activeSourceId = proxyManager.getActiveSource()
+            ? proxyManager.getActiveSource().getProxyId()
+            : -1;
+
+          const userData = {
+            version: STATE_VERSION,
+            activeSourceId,
+            store: {
+              route: state.route,
+              views: state.views,
+              widgets: state.widgets,
+            },
+          };
+
+          const options = {
+            recycleViews: true,
+            datasetHandler(dataset, source) {
+              const sourceMeta = source.get('name', 'url', 'remoteMetaData');
+              const datasetMeta = dataset.get('name', 'url', 'remoteMetaData');
+              const metadata = sourceMeta.url ? sourceMeta : datasetMeta;
+              if (source.getKey('girderProvenance')) {
+                return {
+                  serializedType: 'girder',
+                  provenance: source.getKey('girderProvenance'),
+                  item: source.getKey('girderItem'),
+                  meta: source.getKey('meta'),
+                };
+              }
+              if (metadata.name && metadata.url) {
+                return metadata;
+              }
+              return dataset.getState();
+            },
+          };
+
+          const zip = new JSZip();
+          proxyManager.saveState(options, userData).then((stateObject) => {
+            zip.file('state.json', JSON.stringify(stateObject));
+
+            zip
+              .generateAsync({
+                type: 'blob',
+                compression: 'DEFLATE',
+                compressionOptions: { level: 6 },
+              })
+              .then(async (blob) => {
+                try {
+                  // --- Construcción del FormData con todos los campos del DTO ---
+                  const formData = new FormData();
+
+                  // Archivo principal (.glance)
+                  formData.append('file', blob, fileName);
+
+                  // Metadatos (usa las claves exactas del DTO Java)
+                  formData.append('label', payload.label || 'Sin titulo');
+                  formData.append('description', payload.description || '');
+                  formData.append(
+                    'isPublic',
+                    String(payload.isPublic ?? false)
+                  );
+                  formData.append(
+                    'acknowledgement',
+                    payload.acknowledgement || ''
+                  );
+                  formData.append('defaced', String(payload.defaced ?? false));
+                  // Imagen (opcional)
+                  if (payload.imagen) {
+                    const imageFile =
+                      payload.imagen instanceof File
+                        ? payload.imagen
+                        : new File([payload.imagen], 'preview.png', {
+                            type: payload.imagen.type || 'image/png',
+                          });
+                    formData.append('imagen', imageFile);
+                  }
+
+                  // --- POST al backend ---
+                  console.log('hagoel post con: ', formData);
+                  const response = await api.post('/files', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                  });
+
+                  resolve(response.data);
+                } catch (err) {
+                  console.error('Error al subir el estado:', err);
+                  reject(err);
+                }
+              })
+              .catch((err) => reject(err))
+              .finally(() => commit('savingState', null));
+          });
+        });
+      },
+
       restoreAppState({ commit, dispatch, state }, appState) {
         commit('loadingState', true);
 

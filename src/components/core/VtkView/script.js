@@ -53,6 +53,8 @@ export default {
       inAnimation: false,
       viewPointMenuVisible: false,
       svgViewBox: '0 0 10 10',
+
+      dialogUpload: false,
     };
   },
   computed: {
@@ -84,6 +86,9 @@ export default {
         }));
       },
     }),
+
+    ...mapGetters('auth', ['isLoggedIn']),
+
     ...mapGetters(['cameraViewPoints']),
     type() {
       return this.viewType.split(':')[0];
@@ -293,5 +298,45 @@ export default {
       'quadView',
     ]),
     ...mapActions(['takeScreenshot', 'changeCameraViewPoint']),
+
+    ...mapActions({
+      saveState: 'postState',
+    }),
+    async uploadPrivate() {
+      this.dialogUpload = true;
+    },
+    async confirmUpload() {
+      try {
+        this.dialogUpload = false;
+
+        let imageToSend = null;
+        if (this.uploadOption === 'screenshot') {
+          const canvas = document.querySelector('canvas');
+          imageToSend = await new Promise((resolve) =>
+            canvas.toBlob(resolve, 'image/png')
+          );
+        } else if (this.uploadOption === 'upload') {
+          imageToSend = this.selectedImage;
+        }
+
+        // Enviamos todo al store
+        const payload = {
+          label: this.label,
+          description: this.description,
+          isPublic: this.isPublic,
+          acknowledgement: this.acknowledgement,
+          defaced: this.defaced,
+          datasetsJson: this.datasetsJson,
+          imagen: imageToSend,
+        };
+
+        await this.$store.dispatch('postState', payload);
+
+        this.$toast.success('Subido correctamente');
+      } catch (err) {
+        console.error(err);
+        this.$toast.error('Error al subir el archivo');
+      }
+    },
   },
 };
