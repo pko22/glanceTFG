@@ -42,6 +42,7 @@ export default {
         console.log('Archivos privados:', response.data);
 
         this.samples = response.data.map((file) => this.formatFile(file));
+        console.log('Muestras cargadas:', this.samples);
       } catch (error) {
         console.error('Error al cargar archivos públicos:', error);
       }
@@ -50,7 +51,7 @@ export default {
       return {
         ...file,
         image: `http://localhost:8080/files/image/${file.id}`,
-        datasets: [
+        datasetsJson: [
           {
             name: file.label,
             url: `http://localhost:8080/files/view/${file.id}`,
@@ -61,17 +62,47 @@ export default {
           : 'Desconocido',
       };
     },
-    openSample(sample) {
-      const urls = [];
-      const names = [];
-
-      // Ajusta esto según la estructura que devuelva tu backend
-      for (let i = 0; i < sample.datasets.length; ++i) {
-        urls.push(sample.datasets[i].url);
-        names.push(sample.datasets[i].name);
+    async openSample(sample) {
+      if (!sample.datasetsJson || sample.datasetsJson.length === 0) {
+        console.warn('El sample no tiene datasets');
+        return;
       }
 
-      this.$emit('open-urls', sample.label, urls, names);
+      const dataset = sample.datasetsJson[0];
+      let url = dataset.url;
+      const fileName = dataset.name;
+
+      // Si es privado, añadimos el token como query param
+      if (!sample.isPublic) {
+        const token = localStorage.getItem('jwt');
+        if (token) {
+          const separator = url.includes('?') ? '&' : '?';
+          url = `${url}${separator}token=${token}`;
+        }
+      }
+
+      console.log('Descargando archivo desde URL:', url);
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`Error al descargar ${fileName}: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        const file = new File(
+          [blob],
+          fileName.endsWith('.glance') ? fileName : `${fileName}.glance`,
+          {
+            type: 'application/octet-stream',
+          }
+        );
+        console.log('Archivo descargado:', file);
+        // Emitimos directamente a openFileList del padre
+        this.$emit('open-files', [file]);
+      } catch (err) {
+        console.error('Error al abrir el sample:', err);
+      }
     },
   },
 };

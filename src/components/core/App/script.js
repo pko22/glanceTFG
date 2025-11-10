@@ -64,7 +64,10 @@ export default {
       errorDialog: false,
       fileUploadDialog: false,
       autoloadDialog: false,
+      openFileDialog: false,
       autoloadLabel: '',
+      openFileLabel: '',
+      progressFinished: false,
       internalControlsDrawer: true,
       screenshotsDrawer: false,
       screenshotCount: 0,
@@ -181,14 +184,40 @@ export default {
       this.fileUploadDialog = true;
     },
     openFileList(fileList) {
-      this.fileUploadDialog = true;
-      this.$nextTick(() => this.openFiles(Array.from(fileList)));
+      if (!fileList || fileList.length === 0) return;
+
+      this.openFileDialog = true;
+      this.openFileLabel = fileList[0].name || 'Archivo';
+      this.progressFinished = false;
+
+      // Emular comportamiento de autoloadRemotes
+      setTimeout(() => {
+        this.openFiles(Array.from(fileList))
+          .then(() => this.load())
+          .then(() => {
+            if (this.anyFileLoadingErrors) {
+              this.$nextTick(() => {
+                this.fileUploadDialog = true;
+              });
+            } else {
+              this.doneLoadingFiles();
+            }
+          })
+          .finally(() => {
+            this.resetQueue();
+            this.progressFinished = true;
+            this.openFileDialog = false;
+          });
+      }, 10);
     },
+
     autoLoadRemotes(label, urls, names) {
       const remotes = urls.map((url, index) => ({
         name: names[index],
         url,
       }));
+
+      console.log('Auto-loading remote files:', remotes);
       this.autoloadDialog = true;
       this.autoloadLabel = label;
       setTimeout(

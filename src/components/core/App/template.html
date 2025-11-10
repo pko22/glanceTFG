@@ -178,7 +178,7 @@
           v-on:load="doneLoadingFiles"
         />
 
-        <!-- Dialog que sale al seleccionar uno de los datos de prueba-->
+        <!-- Dialog que sale al seleccionar uno de los datos de prueba en remoto-->
         <v-dialog v-model="autoloadDialog" persistent width="60%">
           <v-card class="pa-4">
             <v-card-title
@@ -200,6 +200,30 @@
             </v-card-text>
           </v-card>
         </v-dialog>
+
+        <!-- Dialog de progreso para cuando seleccionas un archivo -->
+        <v-dialog v-model="openFileDialog" persistent max-width="400px">
+          <v-card class="pa-4 d-flex flex-column align-center">
+            <v-card-title class="justify-center text-center title black--text">
+              {{ openFileLabel }}
+              <span v-if="progressFinished">Abierto</span>
+              <span v-else>Cargando...</span>
+            </v-card-title>
+
+            <v-card-text class="d-flex justify-center my-4">
+              <v-progress-circular
+                v-if="!progressFinished"
+                indeterminate
+                color="primary"
+                size="60"
+                width="6"
+              />
+              <v-icon v-else color="green" size="60">mdi-check-circle</v-icon>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+
+
 
         <!-- Es un SubComponente visual de loading -->
         <state-file-generator />

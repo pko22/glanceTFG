@@ -339,9 +339,9 @@ export default {
 
           // Convertir base64 a Blob para poder enviarlo
           const res = await fetch(result.imgSrc);
-          imageToSend = await res.blob();
+          const blob = await res.blob();
 
-          console.log('📸 Captura generada automáticamente');
+          imageToSend = new File([blob], 'captura.png', { type: blob.type });
         } else if (this.uploadOption === 'upload') {
           if (!this.selectedImage) {
             this.$toast.error('Por favor, selecciona una imagen');
@@ -355,14 +355,14 @@ export default {
 
         console.log('Imagen que envío:', this.selectedImage, imageToSend);
 
-        // Enviamos todo al store
+        // Enviamos todo al store( por ahora dejamos defaced y dataset por defecto)
         const payload = {
           label: this.label,
           description: this.description,
-          isPublic: this.isPublic,
+          isPublic: false,
           acknowledgement: this.acknowledgement,
-          defaced: this.defaced,
-          datasetsJson: this.datasetsJson,
+          defaced: false,
+          datasets: null,
           imagen: imageToSend,
         };
 
