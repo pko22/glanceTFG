@@ -189,7 +189,6 @@
                   outlined
                 ></v-file-input>
               </v-card-text>
-
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn text color="grey" @click="dialogUpload = false">Cancelar</v-btn>
@@ -199,7 +198,7 @@
           </v-dialog>
 
 
-          <!-- Botón para hacer deface -->
+          <!-- Botón para hacer deface 
           <v-tooltip top :disabled="smallScreen">
             <span class="pv-no-select">Deface</span>
             <template v-slot:activator="{ on }">
@@ -209,14 +208,14 @@
                 :disabled="!view"
                 v-on="on"
               >
-                <!--@click="doDeface"-->
+                --@click="doDeface"--
 
                 <v-icon>mdi-face-man-shimmer-outline</v-icon>
               </v-btn>
             </template>
           </v-tooltip>
 
-          <!-- Botón para subir al almacén público -->
+           Botón para subir al almacén público --
           <v-tooltip top :disabled="smallScreen">
             <span class="pv-no-select">Subir a almacén público</span>
             <template v-slot:activator="{ on }">
@@ -226,12 +225,14 @@
                 :disabled="!view"
                 v-on="on"
               >
-                <!--@click="uploadPublic"-->
+                --@click="uploadPublic"--
 
                 <v-icon>mdi-upload</v-icon>
               </v-btn>
             </template>
           </v-tooltip>
+                -->
+
         </template>
 
 

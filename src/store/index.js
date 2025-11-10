@@ -533,6 +533,25 @@ function createStore(injected) {
         }
         return Promise.resolve();
       },
+      takeScreenshotSilent({ state }, viewToUse = null) {
+        const view = viewToUse || proxyManager.getActiveView();
+        const viewType = viewHelper.getViewType(view);
+
+        if (view) {
+          return view.captureImage().then((imgSrc) => {
+            return {
+              imgSrc,
+              viewName: view.getName(),
+              viewData: {
+                background: state.views.backgroundColors[viewType],
+              },
+            };
+          });
+        }
+
+        return Promise.resolve(null);
+      },
+
       setCameraViewPoints({ dispatch, state }, viewPoints) {
         state.cameraViewPoints = viewPoints;
         const keys = Object.keys(viewPoints);

@@ -55,6 +55,7 @@ export default {
       svgViewBox: '0 0 10 10',
 
       dialogUpload: false,
+      uploadOption: null,
     };
   },
   computed: {
@@ -303,21 +304,56 @@ export default {
       saveState: 'postState',
     }),
     async uploadPrivate() {
+      this.label = '';
+      this.description = '';
+      this.acknowledgement = '';
+      this.selectedImage = null;
+
+      this.dialogUpload = true;
+
       this.dialogUpload = true;
     },
+
     async confirmUpload() {
       try {
         this.dialogUpload = false;
 
         let imageToSend = null;
+        // 📸 Caso 1: Si el usuario eligió captura de pantalla
         if (this.uploadOption === 'screenshot') {
-          const canvas = document.querySelector('canvas');
-          imageToSend = await new Promise((resolve) =>
-            canvas.toBlob(resolve, 'image/png')
+          if (!this.view) {
+            this.$toast.error('No hay vista activa para capturar.');
+            return;
+          }
+
+          // Captura silenciosa directamente desde la vista
+          const result = await this.$store.dispatch(
+            'takeScreenshotSilent',
+            this.view
           );
+
+          if (!result || !result.imgSrc) {
+            this.$toast.error('No se pudo realizar la captura de pantalla.');
+            return;
+          }
+
+          // Convertir base64 a Blob para poder enviarlo
+          const res = await fetch(result.imgSrc);
+          imageToSend = await res.blob();
+
+          console.log('📸 Captura generada automáticamente');
         } else if (this.uploadOption === 'upload') {
-          imageToSend = this.selectedImage;
+          if (!this.selectedImage) {
+            this.$toast.error('Por favor, selecciona una imagen');
+            return;
+          }
+          imageToSend =
+            this.selectedImage instanceof FileList
+              ? this.selectedImage[0]
+              : this.selectedImage;
         }
+
+        console.log('Imagen que envío:', this.selectedImage, imageToSend);
 
         // Enviamos todo al store
         const payload = {
