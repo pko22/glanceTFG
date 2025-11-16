@@ -1,5 +1,6 @@
 import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
 import api from 'paraview-glance/src/api/api';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Landing',
@@ -10,6 +11,19 @@ export default {
     return {
       samples: [],
       version: window.GLANCE_VERSION || 'no version available',
+
+      editDialog: false,
+      editForm: {
+        id: null,
+        label: '',
+        description: '',
+        acknowledgement: '',
+        isPublic: false,
+      },
+
+      editSnackbar: false,
+      editSnackbarMessage: '',
+      editSnackbarColor: 'error',
     };
   },
   async created() {
@@ -20,6 +34,9 @@ export default {
     } else {
       await this.loadPublicFiles();
     }
+  },
+  computed: {
+    ...mapGetters('auth', ['isLoggedIn']),
   },
   methods: {
     async loadPublicFiles() {
@@ -102,6 +119,84 @@ export default {
         this.$emit('open-files', [file]);
       } catch (err) {
         console.error('Error al abrir el sample:', err);
+      }
+    },
+
+    openEditDialog(sample) {
+      this.editForm = {
+        id: sample.id,
+        label: sample.label,
+        description: sample.description || '',
+        acknowledgement: sample.acknowledgement || '',
+        isPublic: sample.isPublic || false,
+        image: null,
+      };
+      this.editDialog = true;
+    },
+
+    async saveFileChanges() {
+      try {
+        const updatedData = {
+          label: this.editForm.label,
+          description: this.editForm.description,
+          acknowledgement: this.editForm.acknowledgement,
+          isPublic: this.editForm.isPublic,
+        };
+
+        const response = await api.patch(
+          `/files/${this.editForm.id}`,
+          updatedData
+        );
+
+        console.log('Archivo actualizado:', response.data);
+        this.editDialog = false;
+        console.log('Archivo actualizado correctamente');
+
+        // Actualizar la lista local
+        const index = this.samples.findIndex((f) => f.id === this.editForm.id);
+        if (index !== -1) {
+          this.samples[index] = this.formatFile(response.data);
+        }
+
+        this.editSnackbarMessage = 'Archivo actualizado correctamente';
+        this.editSnackbarColor = 'success';
+        this.editSnackbar = true;
+      } catch (error) {
+        console.error('Error al actualizar archivo:', error);
+        this.editSnackbarMessage =
+          error.response?.data ||
+          'Error al actualizar archivo, no puede ser publico y no defaced.';
+        this.editSnackbarColor = 'error';
+        this.editSnackbar = true;
+      }
+    },
+
+    // Eliminar archivo (DELETE)
+    async deleteFile(sample) {
+      const token = localStorage.getItem('jwt');
+
+      /* eslint-disable no-restricted-globals */
+      /* eslint-disable no-alert */
+      if (!confirm(`¿Seguro que deseas eliminar "${sample.label}"?`)) return;
+
+      try {
+        await api.delete(`/files/${sample.id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        console.log('Archivo eliminado correctamente');
+
+        // Quitar del array local
+        this.samples = this.samples.filter((f) => f.id !== sample.id);
+        this.editSnackbarMessage = 'Archivo eliminado correctamente';
+        this.editSnackbarColor = 'success';
+        this.editSnackbar = true;
+      } catch (error) {
+        console.error('Error al eliminar archivo:', error);
+
+        this.editSnackbarMessage =
+          error.response?.data || 'Error al eliminar archivo';
+        this.editSnackbarColor = 'error';
+        this.editSnackbar = true;
       }
     },
   },

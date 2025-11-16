@@ -127,11 +127,85 @@
             >
               Abrir muestra
             </v-btn>
+             <!-- Solo visibles si hay login -->
+            <template v-if="isLoggedIn">
+              <v-btn
+                color="secondary"
+                text
+                @click.stop="openEditDialog(sample)"
+              >
+                Editar archivo
+              </v-btn>
+              <v-btn
+                color="error"
+                text
+                @click.stop="deleteFile(sample)"
+              >
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
           </v-card-actions>
         </v-card>
       </v-flex>
     </v-layout>
   </v-container>
 
+
+  <v-dialog v-model="editDialog" max-width="600px">
+    <v-card>
+      <v-card-title class="text-h6">Editar archivo</v-card-title>
+
+      <v-card-text>
+        <v-form>
+          <v-text-field
+            label="Etiqueta (label)"
+            v-model="editForm.label"
+            outlined
+            dense
+          ></v-text-field>
+
+          <v-textarea
+            label="Descripción"
+            v-model="editForm.description"
+            outlined
+            dense
+          ></v-textarea>
+
+          <v-text-field
+            label="Reconocimiento (acknowledgement)"
+            v-model="editForm.acknowledgement"
+            outlined
+            dense
+          ></v-text-field>
+
+          <v-switch
+            label="¿Archivo público?"
+            v-model="editForm.isPublic"
+            color="primary"
+          ></v-switch>
+        </v-form>
+      </v-card-text>
+
+      <v-card-actions class="justify-end">
+        <v-btn text @click="editDialog = false">Cancelar</v-btn>
+        <v-btn color="primary" @click="saveFileChanges">Guardar</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+
+  <v-snackbar
+    v-model="editSnackbar"
+    :color="editSnackbarColor"
+    timeout="4000"
+    location="top"
+  >
+    {{ editSnackbarMessage }}
+    <template #actions>
+      <v-btn text @click="editSnackbar = false">
+        Cerrar
+      </v-btn>
+    </template>
+  </v-snackbar>
 
 </div>
