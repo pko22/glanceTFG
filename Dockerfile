@@ -17,8 +17,9 @@ RUN npm install
 COPY . .
 
 # Ejecuta la compilación de Vue (esto genera la carpeta 'dist')
-# Asegúrate de que el script 'build' en tu package.json genere los archivos estáticos correctamente.
-RUN npm run build
+RUN NODE_OPTIONS=--openssl-legacy-provider npm run build
+
+
 
 # ==========================================================
 # ETAPA 2: SERVIDOR DE PRODUCCIÓN (PRODUCTION STAGE)

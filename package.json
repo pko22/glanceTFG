@@ -29,9 +29,11 @@
     "doc": "kw-doc -c ./documentation/config.js",
     "doc:www": "kw-doc -c ./documentation/config.js -s",
     "doc:publish": "kw-doc -c ./documentation/config.js -mp",
-    "build": "webpack --config build/webpack.dev.config.js",
-    "build:release": "webpack --progress --config build/webpack.prod.config.js",
-    "build:inline": "webpack --progress --config build/webpack.inline.config.js && inline-source --compress false --root ./dist ./dist/index.html ./dist/ParaViewGlance.html",
+
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider && webpack --config build/webpack.dev.config.js",
+    "build:release": "set NODE_OPTIONS=--openssl-legacy-provider && webpack --progress --config build/webpack.prod.config.js",
+    "build:inline": "set NODE_OPTIONS=--openssl-legacy-provider && webpack --progress --config build/webpack.inline.config.js && inline-source --compress false --root ./dist ./dist/index.html ./dist/ParaViewGlance.html",
+
     "version": "node ./build/writeVersion.js",
     "dev": "set NODE_OPTIONS=--openssl-legacy-provider && webpack-dev-server --config build/webpack.dev.config.js",
     "commit": "git cz",
