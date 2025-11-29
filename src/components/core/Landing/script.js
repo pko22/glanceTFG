@@ -24,8 +24,6 @@ export default {
       editSnackbar: false,
       editSnackbarMessage: '',
       editSnackbarColor: 'error',
-
-      responseMessage: null,
     };
   },
   async created() {
@@ -199,28 +197,6 @@ export default {
           error.response?.data || 'Error al eliminar archivo';
         this.editSnackbarColor = 'error';
         this.editSnackbar = true;
-      }
-    },
-
-    async executeScript() {
-      this.responseMessage = 'Contactando al servidor...';
-
-      try {
-        // Usamos la instancia 'api' que ya tienes importada
-        const response = await api.get('/deface/execute');
-        this.responseMessage = response.data;
-      } catch (error) {
-        console.error('Error al ejecutar el script:', error);
-
-        if (error.response) {
-          this.responseMessage =
-            error.response.data || 'Error desconocido del servidor.';
-        } else if (error.request) {
-          this.responseMessage =
-            'No se pudo conectar con el servidor. ¿Está encendido?';
-        } else {
-          this.responseMessage = `Error: ${error.message}`;
-        }
       }
     },
   },

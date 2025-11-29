@@ -64,22 +64,6 @@
     </v-container>
   </v-responsive>
 
-
-  <div 
-    v-if="isLoggedIn">
-    <v-btn
-
-      @click="executeScript"
-    >
-      Ejecutar Script de Fecha
-    </v-btn>
-
-    <div v-if="responseMessage" 
-    >
-      <strong>Respuesta del Backend:</strong>
-      <pre>{{ responseMessage }}</pre>
-    </div>
-  </div>
   <!-- Datos de ejemplo-->
   <v-container class="mt-4 pv-no-select" grid-list-lg>
     <v-layout row wrap>

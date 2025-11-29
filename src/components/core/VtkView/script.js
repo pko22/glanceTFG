@@ -12,6 +12,7 @@ import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette'
 import ToolSvgTarget from 'paraview-glance/src/components/tools/ToolSvgTarget';
 
 import { updateViewOrientationFromBasisAndAxis } from 'paraview-glance/src/utils';
+import api from 'paraview-glance/src/api/api';
 
 const ROTATION_STEP = 2;
 
@@ -56,6 +57,9 @@ export default {
 
       dialogUpload: false,
       uploadOption: null,
+
+      dialogDeface: false,
+      responseDefaceMessage: null,
     };
   },
   computed: {
@@ -319,7 +323,7 @@ export default {
         this.dialogUpload = false;
 
         let imageToSend = null;
-        // 📸 Caso 1: Si el usuario eligió captura de pantalla
+        // Caso 1: Si el usuario eligió captura de pantalla
         if (this.uploadOption === 'screenshot') {
           if (!this.view) {
             this.$toast.error('No hay vista activa para capturar.');
@@ -365,6 +369,7 @@ export default {
           datasets: null,
           imagen: imageToSend,
         };
+        console.log('Payload a ENVIARRRRR:', payload);
 
         await this.$store.dispatch('postState', payload);
 
@@ -372,6 +377,31 @@ export default {
       } catch (err) {
         console.error(err);
         this.$toast.error('Error al subir el archivo');
+      }
+    },
+    async executeScript() {
+      this.dialogDeface = true;
+      console.log('Botón DEFACE pulsado');
+
+      this.responseDefaceMessage = 'Contactando al servidor...';
+      console.log(this.responseDefaceMessage);
+      try {
+        // Usamos la instancia 'api' que ya tienes importada
+        const response = await api.get('/deface/execute');
+        this.responseDefaceMessage = response.data;
+        console.log(this.responseDefaceMessage);
+      } catch (error) {
+        console.error('Error al ejecutar el script:', error);
+
+        if (error.response) {
+          this.responseDefaceMessage =
+            error.response.data || 'Error desconocido del servidor.';
+        } else if (error.request) {
+          this.responseDefaceMessage =
+            'No se pudo conectar con el servidor. ¿Está encendido?';
+        } else {
+          this.responseDefaceMessage = `Error: ${error.message}`;
+        }
       }
     },
   },

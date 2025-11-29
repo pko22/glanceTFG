@@ -197,6 +197,30 @@
             </v-card>
           </v-dialog>
 
+          <!-- Botón para hacer deface -->
+          <v-btn
+            @click="executeScript"
+          >
+            <v-icon>mdi-face-man-shimmer-outline</v-icon>
+          </v-btn>
+          <v-dialog v-model="dialogDeface" max-width="500px">
+            <v-card>
+              <v-card-title>Respuesta de DEFACE</v-card-title>
+              <v-card-text>
+                <div v-if="responseDefaceMessage" 
+                >
+                  <strong>Respuesta del Backend:</strong>
+                  <pre>{{ responseDefaceMessage }}</pre>
+                </div>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn text color="grey" @click="dialogDeface = false">Salir</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+
 
           <!-- Botón para hacer deface 
           <v-tooltip top :disabled="smallScreen">

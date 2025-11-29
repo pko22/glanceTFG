@@ -92,7 +92,7 @@ export default {
     },
     ...mapGetters('auth', {
       isLoggedIn: 'isLoggedIn',
-      user: 'getUser',
+      getUser: 'getUser',
     }),
     ...mapState({
       loadingState: 'loadingState',
@@ -125,6 +125,8 @@ export default {
     this.internalControlsDrawer = !this.smallScreen;
   },
   mounted() {
+    console.log('Usuario en store tras login:', this.getUser);
+
     this.$root.$on('open_girder_panel', () => {
       this.fileUploadDialog = true;
     });
@@ -260,26 +262,44 @@ export default {
 
     // Entrar sin login
     enterAnonymous() {
-      this.currentScreen = 'app'; // Cambia a la app principal
+      this.currentScreen = 'app';
     },
 
     // Login exitoso
-    loginSuccess(/* user */) {
-      this.currentScreen = 'app'; // Cambia a la app principal tras login
+    loginSuccess() {
+      console.log('RECOGO LOGINSUCCESS------');
+
+      this.currentScreen = 'app';
+      console.log('Usuario en store tras login---------:', this.getUser);
     },
 
     // Registro exitoso
-    registerSuccess(/* user */) {
-      this.currentScreen = 'app'; // Cambia a la app principal tras registro
+    registerSuccess() {
+      this.currentScreen = 'app';
     },
-
-    // Volver al welcome (abria que borrar el usuario de Vuex)
+    // Volver al welcome
     async logout() {
+      window.history.replaceState({}, document.title, '/');
       try {
         await api.post('/auth/logout');
         console.log('Sesión de backend limpiada.');
       } catch (error) {
         console.warn('Advertencia al limpiar sesión de backend:', error);
+      }
+      // 2. Eliminar *todos* los datasets
+      if (this.$proxyManager) {
+        const sources = this.$proxyManager.getSources();
+
+        sources.forEach((source) => {
+          console.log(`Eliminando dataset: ${source.getName()}`);
+          this.$proxyManager.deleteProxy(source);
+        });
+
+        console.log('Todos los datasets han sido eliminados.');
+      } else {
+        console.error(
+          'Error: $proxyManager no está disponible para limpiar datasets.'
+        );
       }
 
       this.$store.dispatch('auth/logout');

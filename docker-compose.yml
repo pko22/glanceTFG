@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # Define el servicio del frontend de Vue
+  frontend:
+    # Construye la imagen usando el Dockerfile en el directorio actual
+    build:
+      context: .
+      dockerfile: Dockerfile
+    
+    # Nombre opcional para el contenedor
+    container_name: vue_frontend
+    
+    # Mapea el puerto 80 del contenedor al puerto 9999 de tu máquina host
+    # (Ajusta el 9999 si quieres usar otro puerto)
+    ports:
+      - "9999:80" 
+    
+    # Detener y reiniciar el contenedor automáticamente si falla
+    restart: always
+
+# Define la red (opcional si solo tienes el frontend)
+networks:
+  default:
+    name: mi_aplicacion_network

@@ -1,5 +1,6 @@
 import Login from 'paraview-glance/src/components/views/Login';
 import Register from 'paraview-glance/src/components/views/Register';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'Welcome',
@@ -20,6 +21,8 @@ export default {
     this.checkAuthSuccess();
   },
   methods: {
+    ...mapActions('auth', ['loginGoogle', 'fetchGoogleLogin']),
+    ...mapMutations('auth', ['setToken', 'setUser']),
     async enterAnonymous() {
       try {
         this.$emit('enter-anonymous');
@@ -45,29 +48,26 @@ export default {
         this.$emit('register-success');
       }, 3000);
     },
-    loginWithGoogle() {
+    async loginWithGoogle() {
       localStorage.removeItem('jwt');
-      // Redirige al endpoint OAuth2 de tu backend
-      window.location.href =
-        'http://localhost:8080/oauth2/authorization/google';
+      await this.loginGoogle();
     },
     async checkAuthSuccess() {
       const params = new URLSearchParams(window.location.search);
       if (params.get('auth') === 'success') {
         const token = params.get('token');
         const name = decodeURIComponent(params.get('name') || '');
+        const email = decodeURIComponent(params.get('email') || '');
         const picture = decodeURIComponent(params.get('picture') || '');
 
         if (token) {
-          // Guarda el token en localStorage
-          localStorage.setItem('jwt', token);
-
-          // Crea el objeto de usuario
-          const user = { name, picture, token };
-
-          // Limpia la URL (opcional pero recomendable)
-          window.history.replaceState({}, document.title, '/');
-
+          console.log('Token recibido de Google:', token);
+          console.log('NOMBRE recibido de Google:', name);
+          console.log('EMAIL recibido de Google:', email);
+          // Guardmos el usuario en el store
+          this.setToken(token);
+          this.setUser(email);
+          const user = { email, picture, token };
           console.log('Login con Google exitoso:', user);
 
           this.handleLoginSuccess(user);

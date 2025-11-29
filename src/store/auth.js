@@ -42,17 +42,6 @@ export default {
       window.location.href =
         'http://localhost:8080/oauth2/authorization/google';
     },
-    async fetchGoogleLogin({ commit }) {
-      const response = await api.get('/auth/login/success');
-      const token = response.data.token;
-      commit('setToken', token);
-      commit('setUser', {
-        username: response.data.username,
-        name: response.data.name,
-        picture: response.data.picture,
-      });
-      return response.data;
-    },
     async register({ commit }, { username, password }) {
       try {
         const response = await api.post('/auth/register', {
