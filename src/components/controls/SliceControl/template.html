@@ -9,7 +9,7 @@
       <v-container fluid grid-list-sm class="pa-0">
         <v-layout row wrap align-center>
           <v-flex xs3>
-            <label :class="$style.smallLabel">Ventana</label>
+            <label :class="$style.smallLabel" for="ventana">Ventana</label>
           </v-flex>
           <v-flex xs6>
             <v-slider
@@ -34,7 +34,7 @@
             />
           </v-flex>
           <v-flex xs3>
-            <label :class="$style.smallLabel">Nivel</label>
+            <label :class="$style.smallLabel" for="nivel">Nivel</label>
           </v-flex>
           <v-flex xs6>
             <v-slider
@@ -81,7 +81,7 @@
               v-on:click.stop="setToggleSliceX()"
               color="blue-grey"
             >
-              <label :class="$style.smallLabel">X</label>
+              <label :class="$style.smallLabel" for="x">X</label>
             </v-btn>
           </v-flex>
           <v-flex xs7 :class="isSliceAvailable('x') || (isSliceAvailable('default') && xSliceVisibility) ? '' : $style.disable">
@@ -117,7 +117,7 @@
                 v-on:click.stop="setToggleSliceY()"
                 color="blue-grey"
               >
-                <label :class="$style.smallLabel">Y</label>
+                <label :class="$style.smallLabel" for="y">Y</label>
               </v-btn>
             </div>
           </v-flex>
@@ -154,7 +154,7 @@
                 v-on:click.stop="setToggleSliceZ()"
                 color="blue-grey"
               >
-                <label :class="$style.smallLabel">Z</label>
+                <label :class="$style.smallLabel" for="z">Z</label>
               </v-btn>
             </div>
           </v-flex>

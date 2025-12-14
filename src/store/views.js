@@ -249,7 +249,7 @@ export default ({ proxyManager }) => ({
           };
 
           // viewOrientation = directionMatrix * transpose(sparseDirectionMatrix)
-          const viewOrientation = Array(3);
+          const viewOrientation = new Array(3);
           mat3.transpose(viewOrientation, sparseDirectionMatrix);
           mat3.mul(viewOrientation, directionMatrix, viewOrientation);
 

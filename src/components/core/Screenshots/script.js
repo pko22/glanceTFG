@@ -46,7 +46,7 @@ function viewScreenshot(viewName, index) {
 function getTotalCount() {
   return Object.values(this.screenshots)
     .map((s) => s.length)
-    .reduce((total, value) => total + value);
+    .reduce((total, value) => total + value,0);
 }
 
 // ----------------------------------------------------------------------------

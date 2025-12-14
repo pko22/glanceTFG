@@ -125,7 +125,7 @@ module.exports = {
         },
         {
           // globs use forward slashes
-          from: `${paths.root.replace(/\\/g, '/')}/itk/web-build/itkfiltering*`,
+          from: `${paths.root.replaceAll(/\\/g, '/')}/itk/web-build/itkfiltering*`,
           to: path.join('itk', 'Pipelines', '[name][ext]'),
         },
         { from: 'static/ParaView.png' },

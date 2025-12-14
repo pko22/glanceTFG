@@ -168,12 +168,12 @@ export function updateViewOrientationFromBasisAndAxis(
   const { forwardAxis, forwardOrientation, upwardAxis, upwardOrientation } =
     MODE_TO_AXES[mode];
   const forwardVector = vec3.scale(
-    Array(3),
+    new Array(3),
     basis.slice(forwardAxis * 3, forwardAxis * 3 + 3),
     forwardOrientation
   );
   const upwardVector = vec3.scale(
-    Array(3),
+    new Array(3),
     basis.slice(upwardAxis * 3, upwardAxis * 3 + 3),
     upwardOrientation
   );
@@ -185,7 +185,7 @@ export function updateViewOrientationFromBasisAndAxis(
   const originalViewUp = camera.getViewUp();
   const originalFocalPoint = camera.getFocalPoint();
 
-  const position = vec3.add(Array(3), originalFocalPoint, forwardVector);
+  const position = vec3.add(new Array(3), originalFocalPoint, forwardVector);
 
   camera.setPosition(...position);
   camera.setViewUp(...upwardVector);

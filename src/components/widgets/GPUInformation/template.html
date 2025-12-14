@@ -6,6 +6,10 @@
       <v-tooltip top>
         <table :class="$style.table">
           <tr>
+            <th class="body-2">Atributo</th> 
+            <th class="body-2">Valor</th>
+           </tr>
+          <tr>
             <td class="body-2">WebGL</td>
             <td class="body-1">{{ webgl }}</td>
           </tr>
@@ -18,14 +22,7 @@
             <td class="body-1">{{ gpu }}</td>
           </tr>
         </table>
-  <!--       <v-layout row wrap>
-          <v-flex xs4 class="body-2">WebGL Version</v-flex>
-          <v-flex xs8 class="body-1">{{ webgl }}</v-flex>
-          <v-flex xs4 class="body-2">Vendor</v-flex>
-          <v-flex xs8 class="body-1">{{ vendor }}</v-flex>
-          <v-flex xs4 class="body-2">GPU</v-flex>
-          <v-flex xs8 class="body-1">{{ gpu }}</v-flex>
-        </v-layout> -->
+
         <template v-slot:activator="{ on }">
           <v-icon v-on="on" small>mdi-help-circle</v-icon>
         </template>
