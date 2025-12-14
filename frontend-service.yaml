@@ -1,0 +1,16 @@
+# frontend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: glance-frontend-service
+  labels:
+    app: glance-frontend
+spec:
+  type: NodePort # Permite el acceso desde fuera del clúster (tu navegador)
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    # NodePort asignará un puerto aleatorio alto (30000-32767) en tu máquina.
+  selector:
+    app: glance-frontend

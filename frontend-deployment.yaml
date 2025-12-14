@@ -1,0 +1,43 @@
+# frontend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glance-frontend-deployment
+  labels:
+    app: glance-frontend
+spec:
+  replicas: 2 # 2 réplicas iniciales
+  selector:
+    matchLabels:
+      app: glance-frontend
+  template:
+    metadata:
+      labels:
+        app: glance-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: pako22/glancetfg-frontend:latest
+        ports:
+        - containerPort: 80 
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "300m"
+            memory: "256Mi"
+
+        # Health Checks: Probes simples para Nginx
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5

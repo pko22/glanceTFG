@@ -1,3 +1,7 @@
 {
-    "cmake.sourceDirectory": "C:/Users/Equipo/Desktop/TFGs/TFG1/glanceTFG/itk"
+    "cmake.sourceDirectory": "C:/Users/Equipo/Desktop/TFGs/TFG1/glanceTFG/itk",
+    "sonarlint.connectedMode.project": {
+        "connectionId": "pko22",
+        "projectKey": "pko22_glanceTFG_frontend"
+    }
 }

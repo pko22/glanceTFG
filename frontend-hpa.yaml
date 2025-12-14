@@ -1,0 +1,21 @@
+# frontend-hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: glance-frontend-hpa
+  labels:
+    app: glance-frontend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: glance-frontend-deployment
+  minReplicas: 2
+  maxReplicas: 8 # Máximo más alto ya que el frontend consume menos recursos
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
