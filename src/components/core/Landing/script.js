@@ -85,6 +85,7 @@ export default {
         return;
       }
 
+      this.$store.commit('SET_CURRENT_STATE_ID', sample.id); // Guardamos el id
       const dataset = sample.datasetsJson[0];
       let url = dataset.url;
       const fileName = dataset.name;

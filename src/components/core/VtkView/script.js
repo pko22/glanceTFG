@@ -383,26 +383,60 @@ export default {
       this.dialogDeface = true;
       console.log('Botón DEFACE pulsado');
 
+      // 1. Verificación del ID en el Store
+      const id = this.$store.state.currentStateId;
+
+      if (!id) {
+        this.responseDefaceMessage =
+          'El archivo debe estar subido a nuestra BBDD para ejecutar el deface.';
+        console.warn('Ejecución abortada: No hay ID en el store.');
+        return;
+      }
+
       this.responseDefaceMessage = 'Contactando al servidor...';
-      console.log(this.responseDefaceMessage);
+
       try {
-        // Usamos la instancia 'api' que ya tienes importada
-        const response = await api.get('/deface/execute');
-        this.responseDefaceMessage = response.data;
-        console.log(this.responseDefaceMessage);
+        console.log('ID del file actual:', id);
+
+        // 2. Llamada a la API
+        const response = await api.get(`/deface/execute/${id}`);
+        console.log('Respuesta del servidor recibida:', response);
+        // 3. Desestructuramos la respuesta híbrida (Texto + Base64)
+        const { scriptOutput, zipFile } = response.data;
+
+        // Mostramos la salida del algoritmo en el mensaje del diálogo
+        this.responseDefaceMessage = scriptOutput;
+
+        // 4. Si el servidor envió el ZIP, lo descargamos automáticamente
+        if (zipFile) {
+          console.log('Iniciando descarga del archivo ZIP defaced...');
+          this.downloadBase64File(zipFile, `resultado_deface_${id}.zip`);
+        }
       } catch (error) {
         console.error('Error al ejecutar el script:', error);
 
         if (error.response) {
+          // Intentamos mostrar el error que viene del backend o el output de Python si falló
           this.responseDefaceMessage =
-            error.response.data || 'Error desconocido del servidor.';
-        } else if (error.request) {
+            error.response.data.scriptOutput ||
+            error.response.data ||
+            'Error desconocido del servidor.';
+        } else {
           this.responseDefaceMessage =
             'No se pudo conectar con el servidor. ¿Está encendido?';
-        } else {
-          this.responseDefaceMessage = `Error: ${error.message}`;
         }
       }
+    },
+
+    // Método para gestionar la descarga del Base64
+    downloadBase64File(base64String, fileName) {
+      const linkSource = `data:application/zip;base64,${base64String}`;
+      const downloadLink = document.createElement('a');
+      downloadLink.href = linkSource;
+      downloadLink.download = fileName;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
     },
   },
 };

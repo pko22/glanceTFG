@@ -35,7 +35,6 @@ function extractFilenameFromUrl(url) {
   return url.split('/').pop()?.split('?').shift();
 }
 
-// quick object merge using Vue.set
 /* eslint-disable no-param-reassign */
 function merge(dst, src) {
   const keys = Object.keys(src);
@@ -49,7 +48,6 @@ function merge(dst, src) {
   }
   return dst;
 }
-/* eslint-enable no-param-reassign */
 
 function stepActiveSlice(proxyManager, inc) {
   const view = proxyManager.getActiveView();
@@ -83,8 +81,9 @@ function createStore(injected) {
   const $store = new Vuex.Store({
     plugins: [ProxyManagerVuexPlugin(proxyManager)],
     state: {
-      proxyManager, // TODO remove
-      route: 'landing', // valid values: landing, app
+      proxyManager,
+      route: 'landing',
+      currentStateId: null, // Para saber el id con el que hacer defacing
       savingStateName: null,
       loadingState: false,
       screenshotDialog: false,
@@ -94,6 +93,7 @@ function createStore(injected) {
       mostRecentViewPoint: null,
       collapseDatasetPanels: false,
       suppressBrowserWarning: false,
+      originalFiles: [], // Almacén de dicoms originales para defacing
     },
     getters: {
       proxyManager(state) {
@@ -114,6 +114,14 @@ function createStore(injected) {
       auth,
     },
     mutations: {
+      // CORRECCIÓN LINTER: Cambiado 'files' por 'rawFiles'
+      SET_ORIGINAL_FILES(state, rawFiles) {
+        state.originalFiles = rawFiles;
+      },
+      SET_CURRENT_STATE_ID(state, id) {
+        state.currentStateId = id;
+        console.log('Store: ID del archivo actualizado a:', id);
+      },
       showLanding(state) {
         state.route = 'landing';
       },
@@ -155,6 +163,14 @@ function createStore(injected) {
       closeScreenshotDialog: wrapMutationAsAction('closeScreenshotDialog'),
       collapseDatasetPanels: wrapMutationAsAction('collapseDatasetPanels'),
       suppressBrowserWarning: wrapMutationAsAction('suppressBrowserWarning'),
+
+      // CORRECCIÓN LINTER: Cambiado de 'files' a 'filesToSave'
+      saveOriginalFilesForDefacing({ commit }, filesToSave) {
+        console.log('--- SECUESTRANDO ARCHIVOS PARA EL TFG ---');
+        console.log(`Guardando ${filesToSave.length} archivos en el almacén.`);
+        commit('SET_ORIGINAL_FILES', filesToSave);
+      },
+
       saveState({ commit, state }, fileNameToUse) {
         const t = new Date();
         const fileName =
@@ -196,7 +212,6 @@ function createStore(injected) {
             if (metadata.name && metadata.url) {
               return metadata;
             }
-            // Not a remote dataset so use basic dataset serialization
             return dataset.getState();
           },
         };
@@ -217,24 +232,23 @@ function createStore(injected) {
               const anchor = document.createElement('a');
               anchor.setAttribute('href', url);
               anchor.setAttribute('download', fileName);
-
               document.body.appendChild(anchor);
               anchor.click();
               document.body.removeChild(anchor);
-
               setTimeout(() => URL.revokeObjectURL(url), 60000);
             })
             .then(() => commit('savingState', null));
         });
       },
+
       postState({ commit, state }, payload = {}) {
-        // payload contendrá los campos adicionales (label, description, imagen, etc.)
         return new Promise((resolve, reject) => {
           const t = new Date();
           const fileName = `${t.getFullYear()}${
             t.getMonth() + 1
           }${t.getDate()}_${t.getHours()}-${t.getMinutes()}-${t.getSeconds()}.glance`;
-          console.log('El nombre es:-------------------->', fileName);
+
+          console.log('Iniciando empaquetado del archivo:', fileName);
           commit('savingState', fileName);
 
           const activeSourceId = proxyManager.getActiveSource()
@@ -257,14 +271,6 @@ function createStore(injected) {
               const sourceMeta = source.get('name', 'url', 'remoteMetaData');
               const datasetMeta = dataset.get('name', 'url', 'remoteMetaData');
               const metadata = sourceMeta.url ? sourceMeta : datasetMeta;
-              if (source.getKey('girderProvenance')) {
-                return {
-                  serializedType: 'girder',
-                  provenance: source.getKey('girderProvenance'),
-                  item: source.getKey('girderItem'),
-                  meta: source.getKey('meta'),
-                };
-              }
               if (metadata.name && metadata.url) {
                 return metadata;
               }
@@ -273,69 +279,124 @@ function createStore(injected) {
           };
 
           const zip = new JSZip();
-          proxyManager.saveState(options, userData).then((stateObject) => {
-            zip.file('state.json', JSON.stringify(stateObject));
 
-            zip
-              .generateAsync({
-                type: 'blob',
-                compression: 'DEFLATE',
-                compressionOptions: { level: 6 },
-              })
-              .then(async (blob) => {
-                try {
-                  // --- Construcción del FormData con todos los campos del DTO ---
-                  const formData = new FormData();
+          proxyManager
+            .saveState(options, userData)
+            .then(async (stateObject) => {
+              // 1. Guardamos el JSON de la escena
+              zip.file('state.json', JSON.stringify(stateObject));
 
-                  // Archivo principal (.glance)
-                  formData.append('file', blob, fileName);
+              const dicomFolder = zip.folder('dicoms');
+              let totalFilesAdded = 0;
 
-                  // Metadatos (usa las claves exactas del DTO Java)
-                  formData.append('label', payload.label || 'Sin titulo');
-                  formData.append('description', payload.description || '');
-                  formData.append(
-                    'isPublic',
-                    String(payload.isPublic ?? false)
+              // --- LÓGICA DE EXTRACCIÓN PARA EL TFG ---
+
+              // A. Intentar obtener archivos vinculados a las Fuentes (Inyectados por ReaderFactory)
+              const sources = proxyManager.getSources();
+              sources.forEach((source) => {
+                const fileData = source.getKey('files');
+                if (fileData && fileData.files) {
+                  const filesArray = fileData.files;
+                  console.log(
+                    `Fuente "${source.getName()}": detectados ${
+                      filesArray.length
+                    } archivos vinculados.`
                   );
-                  formData.append(
-                    'acknowledgement',
-                    payload.acknowledgement || ''
-                  );
-                  formData.append('defaced', String(payload.defaced ?? false));
-                  // Imagen (opcional)
-                  if (payload.imagen) {
-                    const imageFile =
-                      payload.imagen instanceof File
-                        ? payload.imagen
-                        : new File([payload.imagen], 'preview.png', {
-                            type: payload.imagen.type || 'image/png',
-                          });
-                    formData.append('imagen', imageFile);
-                  }
-
-                  // --- POST al backend ---
-                  console.log('hagoel post con: ', formData);
-                  const response = await api.post('/files', formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
+                  filesArray.forEach((file) => {
+                    dicomFolder.file(file.name, file);
+                    totalFilesAdded += 1;
                   });
-
-                  resolve(response.data);
-                } catch (err) {
-                  console.error('Error al subir el estado:', err);
-                  reject(err);
                 }
-              })
-              .catch((err) => reject(err))
-              .finally(() => commit('savingState', null));
-          });
+              });
+
+              // B. Si lo anterior no encontró nada, recurrir al almacén global originalFiles
+              if (totalFilesAdded === 0) {
+                console.warn(
+                  'No se detectaron archivos en las fuentes. Usando almacén de respaldo...'
+                );
+                const backupFiles = state.originalFiles || [];
+                backupFiles.forEach((file) => {
+                  dicomFolder.file(file.name, file);
+                  totalFilesAdded += 1;
+                });
+              }
+
+              console.log(
+                `TOTAL archivos empaquetados en el ZIP: ${totalFilesAdded}`
+              );
+
+              if (totalFilesAdded === 0) {
+                console.error(
+                  'ERROR CRÍTICO: No hay archivos DICOM para enviar.'
+                );
+              }
+
+              // 2. Generar el ZIP y enviar
+              zip
+                .generateAsync({
+                  type: 'blob',
+                  compression: 'DEFLATE',
+                  compressionOptions: { level: 6 },
+                })
+                .then(async (blob) => {
+                  try {
+                    const formData = new FormData();
+                    formData.append('file', blob, fileName);
+
+                    // Datos del formulario
+                    formData.append('label', payload.label || 'Sin título');
+                    formData.append('description', payload.description || '');
+                    formData.append(
+                      'isPublic',
+                      String(payload.isPublic ?? false)
+                    );
+                    formData.append(
+                      'acknowledgement',
+                      payload.acknowledgement || ''
+                    );
+                    formData.append(
+                      'defaced',
+                      String(payload.defaced ?? false)
+                    );
+
+                    // Imagen de previsualización
+                    if (payload.imagen) {
+                      const imageFile =
+                        payload.imagen instanceof File
+                          ? payload.imagen
+                          : new File([payload.imagen], 'preview.png', {
+                              type: payload.imagen.type || 'image/png',
+                            });
+                      formData.append('imagen', imageFile);
+                    }
+
+                    console.log(
+                      `Enviando a Java: ${totalFilesAdded} archivos DICOM.:`,
+                      formData
+                    );
+
+                    const response = await api.post('/files', formData, {
+                      headers: { 'Content-Type': 'multipart/form-data' },
+                    });
+
+                    resolve(response.data);
+                  } catch (err) {
+                    console.error('Error en la petición POST:', err);
+                    reject(err);
+                  }
+                })
+                .catch((err) => {
+                  console.error('Error generando ZIP:', err);
+                  reject(err);
+                })
+                .finally(() => commit('savingState', null));
+            });
         });
       },
 
       restoreAppState({ commit, dispatch, state }, appState) {
         commit('loadingState', true);
-
         const restoreProxyKeys = new WeakMap();
-
         dispatch('resetWorkspace');
         return proxyManager
           .loadState(appState, {
@@ -343,11 +404,9 @@ function createStore(injected) {
               if (ds.vtkClass) {
                 return vtk(ds);
               }
-
               let name = ds.name;
               let url = ds.url;
               const options = {};
-
               if (ds.serializedType === 'girder') {
                 const { itemId, itemName } = ds.item;
                 const { apiRoot } = ds.provenance;
@@ -360,7 +419,6 @@ function createStore(injected) {
               }
 
               let loadDataset;
-
               if (ds.seriesUrls) {
                 const extension = getExtension(ds.name);
                 const promises = ds.seriesUrls.map((u) =>
@@ -398,11 +456,9 @@ function createStore(injected) {
                     reader.setProxyManager(proxyManager);
                     return null;
                   }
-
                   if (!outDS) {
                     throw new Error('Invalid dataset');
                   }
-
                   if (ds.serializedType === 'girder') {
                     outDS = postProcessDataset(outDS, ds.meta);
                     restoreProxyKeys.set(outDS, {
@@ -411,12 +467,11 @@ function createStore(injected) {
                       meta: ds.meta,
                     });
                   } else {
-                    outDS.set(ds, true); // Attach remote data origin
+                    outDS.set(ds, true);
                   }
                   return outDS;
                 })
                 .catch((e) => {
-                  // more meaningful error
                   const moreInfo = `Dataset doesn't exist or adblock/firewall prevents access.`;
                   if ('xhr' in e) {
                     const { xhr } = e;
@@ -436,7 +491,6 @@ function createStore(injected) {
               this.replaceState(merge(state, userData));
             }
 
-            // restore proxy keys
             proxyManager.getSources().forEach((source) => {
               const ds = source.getDataset();
               if (restoreProxyKeys.has(ds)) {
@@ -445,16 +499,11 @@ function createStore(injected) {
               }
             });
 
-            // make sure store modules have a chance to rewrite their saved mappings
-            // before we re-populate proxy manager state
             dispatch('rewriteProxyIds', {
               appState,
               mapping: $oldToNewIdMapping,
             }).then(() => {
-              // Force update
               proxyManager.modified();
-
-              // Activate visible view with a preference for the 3D one
               const visibleViews = proxyManager
                 .getViews()
                 .filter((view) => view.getContainer());
@@ -465,8 +514,6 @@ function createStore(injected) {
               if (viewToActivate) {
                 viewToActivate.activate();
               }
-
-              // Make sure pre-existing view (not expected in state) have a representation
               proxyManager
                 .getSources()
                 .forEach((s) =>
@@ -481,8 +528,6 @@ function createStore(injected) {
                   source.activate();
                 }
               } else {
-                // old pre-versioned glance state files
-                // activate first source, if any
                 const source = proxyManager.getSources()[0];
                 if (source) {
                   source.activate();
@@ -493,7 +538,6 @@ function createStore(injected) {
           .then(() => commit('loadingState', false));
       },
       resetWorkspace() {
-        // use setTimeout to avoid some weird crashing with extractDomains
         proxyManager
           .getSources()
           .forEach((source) =>
@@ -536,7 +580,6 @@ function createStore(injected) {
       takeScreenshotSilent({ state }, viewToUse = null) {
         const view = viewToUse || proxyManager.getActiveView();
         const viewType = viewHelper.getViewType(view);
-
         if (view) {
           return view.captureImage().then((imgSrc) => {
             return {
@@ -548,18 +591,13 @@ function createStore(injected) {
             };
           });
         }
-
         return Promise.resolve(null);
       },
-
       setCameraViewPoints({ dispatch, state }, viewPoints) {
         state.cameraViewPoints = viewPoints;
         const keys = Object.keys(viewPoints);
         if (keys.length !== 0) {
-          // Set the camera to the first view point
           dispatch('changeCameraViewPoint', keys[0]);
-
-          // Begin first person interaction
           const interactionStyle = 'FirstPerson';
           dispatch('views/setInteractionStyle3D', interactionStyle);
         }
@@ -567,32 +605,26 @@ function createStore(injected) {
       changeCameraViewPoint({ commit, getters, state }, viewPointKey) {
         const allViews = state.proxyManager.getViews();
         const pxManager = getters.proxyManager;
-
         const viewPoints = getters.cameraViewPoints[viewPointKey] || {};
         const camera = viewPoints.camera;
         const showSources = viewPoints.show;
         const hideSources = viewPoints.hide;
-
         const moveCameraPromiseList = [];
 
         allViews
           .filter((v) => v.getName() === 'default')
           .forEach((v) => {
-            // Keep the same focal distance, or else some kind of
-            // shaking sometimes happens during camera interaction.
             const distance = v.getCamera().getDistance();
             const direction = [
               camera.focalPoint[0] - camera.position[0],
               camera.focalPoint[1] - camera.position[1],
               camera.focalPoint[2] - camera.position[2],
             ];
-
             const adjustedFocalPoint = [
               camera.position[0] + direction[0] * distance,
               camera.position[1] + direction[1] * distance,
               camera.position[2] + direction[2] * distance,
             ];
-
             const promise = v.moveCamera(
               adjustedFocalPoint,
               camera.position,
@@ -603,71 +635,46 @@ function createStore(injected) {
           });
 
         Promise.all(moveCameraPromiseList).then(() => {
-          // Modify the source visibilities from the view point settings
           pxManager.getSources().forEach((source) => {
             const name = source.getName();
-
             if (!showSources.includes(name) && !hideSources.includes(name)) {
-              // Don't change the visibility
               return;
             }
-
             const visible = showSources.includes(name);
-
             const rep = pxManager
               .getRepresentations()
               .filter((r) => r.getInput() === source)[0];
-
             if (rep.getVisibility() !== visible) {
               rep.setVisibility(visible);
             }
           });
-
           pxManager.renderAllViews();
         });
-
         commit('mostRecentViewPoint', viewPointKey);
       },
       previousViewPoint({ dispatch, getters }) {
         const lastViewPoint = getters.mostRecentViewPoint;
-        if (!lastViewPoint) {
-          // Nothing to do
-          return;
-        }
-
+        if (!lastViewPoint) return;
         const keys = Object.keys(getters.cameraViewPoints);
-        if (!keys.includes(lastViewPoint)) {
-          return;
-        }
-
+        if (!keys.includes(lastViewPoint)) return;
         const length = keys.length;
         const ind = (keys.indexOf(lastViewPoint) + length - 1) % length;
         dispatch('changeCameraViewPoint', keys[ind]);
       },
       nextViewPoint({ dispatch, getters }) {
         const lastViewPoint = getters.mostRecentViewPoint;
-        if (!lastViewPoint) {
-          // Nothing to do
-          return;
-        }
-
+        if (!lastViewPoint) return;
         const keys = Object.keys(getters.cameraViewPoints);
-        if (!keys.includes(lastViewPoint)) {
-          return;
-        }
-
+        if (!keys.includes(lastViewPoint)) return;
         const ind = (keys.indexOf(lastViewPoint) + 1) % keys.length;
         dispatch('changeCameraViewPoint', keys[ind]);
       },
-
       rewriteProxyIds({ dispatch }, { appState, mapping }) {
-        // split out the mappings
         const extractMapping = (objs) =>
           objs.reduce(
             (map, obj) => ({ ...map, [obj.id]: mapping[obj.id] }),
             {}
           );
-
         const sourcesMapping = extractMapping(appState.sources);
         const viewsMapping = extractMapping(appState.views);
         const repsMapping = extractMapping(appState.representations);
@@ -677,18 +684,13 @@ function createStore(injected) {
           reps: repsMapping,
           all: mapping,
         };
-
         dispatch('widgets/rewriteProxyIds', maps);
         dispatch('views/rewriteProxyIds', maps);
       },
     },
   });
 
-  // We currently need access to the store in a couple of places where
-  // only the proxy manager is available.
-  // TODO: remove this access requirement and the next line when possible.
   proxyManager.set({ $store }, true);
-
   return $store;
 }
 

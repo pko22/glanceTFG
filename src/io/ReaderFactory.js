@@ -132,7 +132,7 @@ function readFile(file) {
       const io = new FileReader();
       io.onload = function onLoad() {
         readRawData({ fileName: file.name, data: io.result })
-          .then((result) => resolve(result))
+          .then((result) => resolve({ ...result, files: [file] }))
           .catch((error) => reject(error));
       };
       io[readMethod](file);
@@ -155,7 +155,6 @@ function loadFiles(files) {
 // ----------------------------------------------------------------------------
 
 function loadFileSeries(files, extension, outFileName = '') {
-  // Este es usado para dicom, que son una serie de archivos
   return new Promise((resolve, reject) => {
     if (files.length) {
       const readerMapping = READER_MAPPING[extension];
@@ -171,7 +170,13 @@ function loadFileSeries(files, extension, outFileName = '') {
         if (fileSeriesMethod) {
           const ds = reader[fileSeriesMethod](files);
           Promise.resolve(ds).then((dataset) =>
-            resolve({ dataset, reader, sourceType, name: outFileName })
+            resolve({
+              dataset,
+              reader,
+              sourceType,
+              name: outFileName,
+              files, // <--- Shorthand: evita error de ESLint
+            })
           );
         } else {
           reject(new Error('No file series method available'));
@@ -212,7 +217,7 @@ function downloadDataset(fileName, url, options = {}) {
 function registerReadersToProxyManager(readers, proxyManager) {
   const retlist = [];
   for (let i = 0; i < readers.length; i += 1) {
-    const { reader, sourceType, name, dataset, metadata, proxyKeys } =
+    const { reader, sourceType, name, dataset, metadata, proxyKeys, files } =
       readers[i];
     let retsource = null;
     if (reader || dataset) {
@@ -233,6 +238,13 @@ function registerReadersToProxyManager(readers, proxyManager) {
             ...metadata,
           })
         : null;
+
+      // Inyectamos los archivos en el source para que el postState los encuentre
+      if (source && files) {
+        source.setKey('files', { files });
+        console.log(`Vinculados ${files.length} archivos a la fuente: ${name}`);
+      }
+
       if (dataset && dataset.isA && dataset.isA('vtkDataSet')) {
         source.setInputData(dataset, sourceType);
       } else if (reader && reader.getOutputData) {
@@ -254,17 +266,6 @@ function registerReadersToProxyManager(readers, proxyManager) {
           });
         }
       }
-
-      if (
-        reader &&
-        reader.getCameraViewPoints &&
-        reader.getCameraViewPoints()
-      ) {
-        proxyManager
-          .getReferenceByName('$store')
-          .dispatch('setCameraViewPoints', reader.getCameraViewPoints());
-      }
-
       retsource = source;
     }
     retlist.push(retsource);
@@ -272,7 +273,6 @@ function registerReadersToProxyManager(readers, proxyManager) {
   proxyManager.renderAllViews();
   return retlist;
 }
-
 // ----------------------------------------------------------------------------
 
 function importBase64Dataset(
