@@ -60,6 +60,11 @@ export default {
 
       dialogDeface: false,
       responseDefaceMessage: null,
+
+      description: '',
+      label: '',
+      acknowledgement: '',
+      selectedImage: null,
     };
   },
   computed: {
@@ -409,8 +414,20 @@ export default {
 
         // 4. Si el servidor envió el ZIP, lo descargamos automáticamente
         if (zipFile) {
+          const fileName = `resultado_deface_${id}.zip`;
           console.log('Iniciando descarga del archivo ZIP defaced...');
-          this.downloadBase64File(zipFile, `resultado_deface_${id}.zip`);
+          this.downloadBase64File(zipFile, fileName);
+
+          const blob = await (
+            await fetch(`data:application/zip;base64,${zipFile}`)
+          ).blob();
+          const file = new File([blob], fileName, { type: 'application/zip' });
+
+          // 3. Cargamos en el visor usando las acciones del store que me pasaste
+          console.log('Procesando DICOMs en el visor...');
+
+          await this.$store.dispatch('files/openFiles', [file]);
+          await this.$store.dispatch('files/load');
         }
       } catch (error) {
         console.error('Error al ejecutar el script:', error);

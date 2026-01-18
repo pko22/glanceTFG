@@ -379,6 +379,18 @@ function createStore(injected) {
                       headers: { 'Content-Type': 'multipart/form-data' },
                     });
 
+                    if (response.data && response.data.id) {
+                      commit('SET_CURRENT_STATE_ID', response.data.id);
+                      console.log(
+                        'ID guardado exitosamente tras el POST:',
+                        response.data.id
+                      );
+                    } else {
+                      console.warn(
+                        'La respuesta del servidor no contenía un ID válido:',
+                        response.data
+                      );
+                    }
                     resolve(response.data);
                   } catch (err) {
                     console.error('Error en la petición POST:', err);

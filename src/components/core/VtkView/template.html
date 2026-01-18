@@ -127,7 +127,6 @@
         </v-tooltip>
 
 
-        <!-- Aqui quiero meter los botones de subir a alamcen privado/ DEFACE/ Subir a almacen publico(solo activo si has hecho deface y login)-->
         
          <template v-if="isLoggedIn">
 
@@ -203,7 +202,10 @@
           >
             <v-icon>mdi-face-man-shimmer-outline</v-icon>
           </v-btn>
-          <v-dialog v-model="dialogDeface" max-width="500px">
+          <v-dialog 
+            v-model="dialogDeface" 
+            max-width="1000px"
+            persistent>
             <v-card>
               <v-card-title>Respuesta de DEFACE</v-card-title>
               <v-card-text>

@@ -125,6 +125,7 @@ export default {
       const proxy = this.$proxyManager.getProxyById(sourceId);
       if (proxy) {
         proxy.activate();
+        this.$store.commit('SET_CURRENT_STATE_ID', sourceId);
       }
       return null;
     },
