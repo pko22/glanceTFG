@@ -4,13 +4,12 @@
       <v-icon>mdi-close</v-icon>
     </v-btn>
   </div>
-  <v-card-title class="text-center">
-    <svg-icon icon="glance-logo" :class="$style.glanceIcon" />
-        (no se si hay que quitar este logo)
-
+  <v-card-title class="d-flex align-center justify-center">
+    <img :src="logo" alt="DicomHub Logo" :class="$style.mainLogo" />
   </v-card-title>
   <v-card-text>
     <p class="body-1">
+      DICOMHUB surge de:
       <a rel="noopener noreferrer" target="_blank" href="https://kitware.github.io/glance/">Glance</a>
       Es un programa de codigo abierto desarrollado por 
       <a rel="noopener noreferrer" target="_blank" href="https://www.kitware.com/">Kitware</a>
@@ -28,30 +27,21 @@
     <ul class="ml-5">
       <li class="body-1">
         <span>Aqui esta el codigo por si quieres descargar la app:</span>
-        <a rel="noopener noreferrer" target="_blank" href="https://github.com/Kitware/glance">Code is on Github(cambiar el enlace)</a>.
+        <a rel="noopener noreferrer" target="_blank" href="https://github.com/Kitware/glance">Code is on Github</a>.
       </li>
     </ul>
 
     <v-layout row wrap class="text-center" align-end>
-      <v-flex xs4>
-
-        (No se si debo quitar estos logos)
-        <a rel="noopener noreferrer" target="_blank" href="https://www.kitware.com">
-          <svg-icon icon="kitware" :class="$style.aboutIcon" />
-        </a>
-      </v-flex>
+          <svg-icon icon="glance-logo" :class="$style.glanceIcon" />
       <v-flex xs4>
         <div>&nbsp;</div>
         <a rel="noopener noreferrer" target="_blank" href="https://kitware.github.io/vtk-js/">
           <svg-icon icon="vtkjs" :class="$style.aboutIcon" />
         </a>
       </v-flex>
-      <v-flex xs4>
-        <div>&nbsp;</div>
-        <a rel="noopener noreferrer" target="_blank" href="http://insightsoftwareconsortium.github.io/itk-wasm/">
-          <svg-icon icon="itkjs" :class="$style.aboutIcon" />
-        </a>
-      </v-flex>
+
+
+
     </v-layout>
 
   </v-card-text>

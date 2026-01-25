@@ -1,5 +1,5 @@
 import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
-
+import dicomHubLogo from 'paraview-glance/static/icons/dicomhub.png';
 // ----------------------------------------------------------------------------
 
 export default {
@@ -10,6 +10,7 @@ export default {
   data() {
     return {
       version: 'not available',
+      logo: dicomHubLogo,
     };
   },
   created() {

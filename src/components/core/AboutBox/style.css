@@ -13,3 +13,11 @@
   width: 50%;
   margin: 0 auto;
 }
+
+/* Dentro de <style module> */
+.mainLogo {
+  height: 300px !important;
+  width: auto !important;
+  align-items: center;
+  display: inline-block;
+}
